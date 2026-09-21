@@ -8,480 +8,1245 @@
 <body style="direction:rtl;font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;margin:0">
 <style>@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');</style>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* --- Global Reset &amp; Variables --- */
+:root {
+  --bg-primary: #071729;
+  --bg-secondary: #0C2142;
+  --bg-tertiary: #102B54;
+  --text-primary: #EAF3FB;
+  --text-secondary: #A9C1D9;
+  --text-tertiary: #7DA7DE;
+  --accent-primary: #A23B72;
+  --accent-secondary: #C9538F;
+  --accent-light: #63BADB;
+  --border-color: rgba(122, 175, 222, 0.18);
+  --header-height: 72px;
+  --transition-global: cubic-bezier(.22,1,.36,1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  direction: rtl;
+}
+
+section {
+  padding: 48px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s var(--transition-global);
+}
+
+a:hover {
+  color: var(--accent-secondary);
+}
+
+/* --- SVG Sprite --- */
+.svg-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* --- Header --- */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: rgba(7, 23, 41, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  transition: background-color 0.3s var(--transition-global);
+}
+
+header.scrolled {
+  background-color: rgba(12, 33, 66, 0.95);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--accent-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-color: var(--accent-secondary);
+  border-radius: 50%;
+}
+
+.logo-text {
+  font-family: 'Estedad', 'Vazirmatn', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.phone {
+  display: none;
+}
+
+.battery-progress {
+  position: relative;
+  width: 80px;
+  height: 24px;
+  background-color: var(--bg-tertiary);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.battery-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to left, var(--accent-light), var(--accent-secondary));
+  border-radius: 12px;
+  transition: width 0.3s var(--transition-global);
+}
+
+.battery-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.menu-toggle {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.3s var(--transition-global);
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* --- Mobile Menu --- */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--transition-global);
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(380px, 88vw);
+  background-color: var(--bg-secondary);
+  padding: 48px 32px;
+  transform: translateX(100%);
+  transition: transform 0.4s var(--transition-global);
+  overflow-y: auto;
+}
+
+.menu-panel.active {
+  transform: translateX(0);
+}
+
+.menu-close {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-close::before,
+.menu-close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-primary);
+  transform: translate(-50%, -50%);
+}
+
+.menu-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.menu-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.menu-list {
+  list-style: none;
+  margin-top: 48px;
+}
+
+.menu-item {
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: navIn 0.5s var(--transition-global) forwards;
+}
+
+.menu-item:nth-child(1) { animation-delay: 0.08s; }
+.menu-item:nth-child(2) { animation-delay: 0.16s; }
+.menu-item:nth-child(3) { animation-delay: 0.24s; }
+.menu-item:nth-child(4) { animation-delay: 0.32s; }
+.menu-item:nth-child(5) { animation-delay: 0.40s; }
+.menu-item:nth-child(6) { animation-delay: 0.48s; }
+
+@keyframes navIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  body {
-    font-family: 'Vazirmatn', Tahoma, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
-  }
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
-  }
-  h1, h2, h3 {
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #0A2E5C;
-  }
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-  }
-  h2 {
-    font-size: 2rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-    margin-bottom: 2rem;
-  }
-  h2:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(to right, #2E86AB, #A23B72);
-    border-radius: 2px;
-  }
-  p {
-    margin-bottom: 1rem;
-    color: #555;
-  }
-  .btn {
-    display: inline-block;
-    background: linear-gradient(to right, #2E86AB, #A23B72);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  }
-  .header {
-    background: linear-gradient(135deg, #0A2E5C, #2E86AB);
-    color: white;
-    padding: 1.5rem 0;
-    position: relative;
-  }
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-  .menu-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 21px;
-    cursor: pointer;
-  }
-  .menu-toggle span {
-    display: block;
-    height: 3px;
-    width: 100%;
-    background-color: white;
-    border-radius: 3px;
-  }
-  .nav-menu {
-    display: flex;
-    list-style: none;
-  }
-  .nav-menu li {
-    margin-left: 2rem;
-  }
-  .nav-menu a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: opacity 0.3s;
-  }
-  .nav-menu a:hover {
-    opacity: 0.8;
-  }
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.menu-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+.menu-footer {
+  margin-top: auto;
+  padding-top: 48px;
+  border-top: 1px solid var(--border-color);
+}
+
+.menu-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* --- Hero Section --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--header-height) + 48px) 24px 48px;
+}
+
+.hero-content {
+  width: 50%;
+  padding-right: 48px;
+}
+
+.hero-label {
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: var(--accent-secondary);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.hero h1 span {
+  border-bottom: 3px solid var(--accent-secondary);
+  padding-bottom: 4px;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-cta a {
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s var(--transition-global);
+}
+
+.hero-cta .btn-primary {
+  background-color: var(--accent-secondary);
+  color: var(--text-primary);
+}
+
+.hero-cta .btn-primary:hover {
+  background-color: var(--accent-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(162, 59, 114, 0.3);
+}
+
+.hero-cta .btn-secondary {
+  border: 2px solid var(--accent-light);
+  color: var(--accent-light);
+}
+
+.hero-cta .btn-secondary:hover {
+  background-color: rgba(99, 186, 219, 0.1);
+}
+
+.trust-bar {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+  padding: 16px;
+  background-color: rgba(16, 43, 84, 0.5);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.trust-item {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trust-item::before {
+  content: '•';
+  color: var(--accent-light);
+}
+
+.hero-graphic {
+  width: 50%;
+  position: relative;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 920px;
+  max-height: 470px;
+}
+
+.hero-svg .bg-circle {
+  animation: rotate 60s linear infinite;
+}
+
+.hero-svg .bg-circle:nth-child(2) {
+  animation-direction: reverse;
+  animation-duration: 80s;
+}
+
+.hero-svg .car {
+  animation: float 5.5s ease-in-out infinite;
+}
+
+.hero-svg .part {
+  cursor: pointer;
+  transition: all 0.3s var(--transition-global);
+}
+
+.hero-svg .part:hover {
+  filter: drop-shadow(0 0 12px rgba(201, 83, 143, 0.8));
+}
+
+.hero-svg .part.inverter:hover { transform: translateY(-9px); }
+.hero-svg .part.battery:hover { transform: translateY(11px); }
+.hero-svg .part.motor:hover { transform: scale(1.14); }
+.hero-svg .port:hover { transform: scale(1.18); }
+
+.hero-svg .road-line {
+  stroke-dasharray: 100;
+  animation: dash 20s linear infinite;
+}
+
+.hero-svg .cable-dot {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.hero-svg .cable-dot:nth-child(2) { animation-delay: 0.5s; }
+.hero-svg .cable-dot:nth-child(3) { animation-delay: 1s; }
+.hero-svg .cable-dot:nth-child(4) { animation-delay: 1.5s; }
+.hero-svg .cable-dot:nth-child(5) { animation-delay: 2s; }
+
+.hero-svg .led {
+  animation: blink 2s ease-in-out infinite;
+}
+
+.hero-svg .led:nth-child(2) { animation-delay: 0.7s; }
+.hero-svg .led:nth-child(3) { animation-delay: 1.4s; }
+
+.hero-svg .cell {
+  animation: cell-pulse 3s ease-in-out infinite;
+}
+
+.hero-svg .cell:nth-child(2) { animation-delay: 0.5s; }
+.hero-svg .cell:nth-child(3) { animation-delay: 1s; }
+.hero-svg .cell:nth-child(4) { animation-delay: 1.5s; }
+.hero-svg .cell:nth-child(5) { animation-delay: 2s; }
+.hero-svg .cell:nth-child(6) { animation-delay: 2.5s; }
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes dash {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -200; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes cell-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* --- Brands Bar --- */
+.brands-section {
+  overflow: hidden;
+  padding: 24px 0;
+  background-color: var(--bg-secondary);
+}
+
+.brands-marquee {
+  display: flex;
+  gap: 32px;
+  animation: scroll 30s linear infinite;
+}
+
+.brands-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-tertiary);
+  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.brand-logo::before {
+  content: '•';
+  color: var(--accent-light);
+}
+
+/* --- Services Section --- */
+.services {
+  padding: 48px 24px;
+}
+
+.services h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.service-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  transition: all 0.3s var(--transition-global);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.service-card::before {
+  content: attr(data-number);
+  position: absolute;
+  top: -20px;
+  right: 24px;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(99, 186, 219, 0.1);
+  line-height: 1;
+}
+
+.service-card-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.service-card-description {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.service-card-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+
+.service-card-features li {
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.service-card-features li::before {
+  content: '•';
+  color: var(--accent-light);
+}
+
+.service-card-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: var(--accent-secondary);
+  color: var(--text-primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.service-card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.service-card-actions a {
+  flex: 1;
+  padding: 12px 20px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s var(--transition-global);
+}
+
+.service-card-actions .btn-primary {
+  background-color: var(--accent-secondary);
+  color: var(--text-primary);
+}
+
+.service-card-actions .btn-primary:hover {
+  background-color: var(--accent-primary);
+}
+
+.service-card-actions .btn-secondary {
+  border: 1px solid var(--accent-light);
+  color: var(--accent-light);
+}
+
+.service-card-actions .btn-secondary:hover {
+  background-color: rgba(99, 186, 219, 0.1);
+}
+
+/* --- Lab Section --- */
+.lab {
+  padding: 48px 24px;
+  background-color: var(--bg-secondary);
+}
+
+.lab h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.lab-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.lab-scene-container {
+  min-height: 500px;
+  background-color: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.lab-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lab-control-item {
+  padding: 16px;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.3s var(--transition-global);
+}
+
+.lab-control-item:hover {
+  background-color: rgba(99, 186, 219, 0.1);
+  border-color: var(--accent-light);
+}
+
+.lab-control-item.active {
+  background-color: rgba(99, 186, 219, 0.2);
+  border-color: var(--accent-light);
+}
+
+.lab-control-item h4 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.lab-control-item p {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}
+
+/* --- Contact Section --- */
+#contact {
+  padding: 48px 24px;
+  background-color: var(--bg-secondary);
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s var(--transition-global);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(99, 186, 219, 0.2);
+}
+
+.form-group select option {
+  background-color: var(--bg-secondary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--accent-secondary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-global);
+}
+
+.form-submit:hover {
+  background-color: var(--accent-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(162, 59, 114, 0.3);
+}
+
+/* --- Toast Notification --- .toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 16px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s var(--transition-global);
+  z-index: 3000;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
   .hero {
-    background: linear-gradient(rgba(10, 46, 92, 0.8), rgba(46, 134, 171, 0.8)), url('https://images.unsplash.com/photo-1554224154-1a3be23b5f5d?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=2070&amp;q=80');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    padding: 5rem 0;
+    flex-direction: column-reverse;
     text-align: center;
+    padding: calc(var(--header-height) + 24px) 24px 24px;
   }
+
+  .hero-content {
+    width: 100%;
+    padding-right: 0;
+    margin-bottom: 48px;
+  }
+
   .hero h1 {
-    color: white;
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
   }
-  .hero p {
-    font-size: 1.2rem;
-    max-width: 800px;
-    margin: 0 auto 2rem;
-    color: rgba(255,255,255,0.9);
+
+  .hero-graphic {
+    width: 100%;
+    height: 400px;
   }
-  .services {
-    padding: 4rem 0;
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    gap: 16px;
   }
+
+  .phone {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-cta a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .trust-bar {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1fr;
   }
-  .service-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  .lab-container {
+    grid-template-columns: 1fr;
   }
-  .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+
+  .form-row {
+    grid-template-columns: 1fr;
   }
-  .service-card h3 {
-    color: #2E86AB;
-    margin-bottom: 1rem;
-  }
-  .about {
-    background: #f1f5f9;
-    padding: 4rem 0;
-  }
-  .about-content {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .testimonials {
-    padding: 4rem 0;
-  }
-  .testimonial-slider {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    overflow-x: auto;
-    padding: 1rem 0;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  .testimonial-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    min-width: 350px;
-    position: relative;
-  }
-  .testimonial-card:before {
-    content: '"';
-    position: absolute;
-    top: -10px;
-    left: 20px;
-    font-size: 4rem;
-    color: #A23B72;
-    opacity: 0.2;
-  }
-  .testimonial-text {
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-  .testimonial-author {
-    font-weight: 600;
-    color: #0A2E5C;
-  }
-  .testimonial-city {
-    color: #777;
-    font-size: 0.9rem;
-  }
-  .contact {
-    padding: 4rem 0;
-    background: #f1f5f9;
-  }
-  .contact-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .contact-icon {
-    width: 40px;
-    height: 40px;
-    background: #2E86AB;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-  .faq {
-    padding: 4rem 0;
-  }
-  .faq-item {
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    overflow: hidden;
-  }
-  .faq-question {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.3s;
-  }
-  .faq-question:hover {
-    background: #e9ecef;
-  }
-  .faq-answer {
-    padding: 0 1.5rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-  .faq-answer.active {
-    padding: 1.5rem;
-    max-height: 500px;
-  }
-  .cta {
-    background: linear-gradient(135deg, #0A2E5C, #2E86AB);
-    color: white;
-    padding: 4rem 0;
-    text-align: center;
-  }
-  .cta h2 {
-    color: white;
-    margin-bottom: 1.5rem;
-  }
-  .cta p {
-    max-width: 600px;
-    margin: 0 auto 2rem;
-    color: rgba(255,255,255,0.9);
-  }
-  @media (max-width: 768px) {
-    .header-content {
-      justify-content: space-between;
-    }
-    .menu-toggle {
-      display: flex;
-    }
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 80%;
-      height: 100%;
-      background: #0A2E5C;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding-top: 6rem;
-      transition: right 0.3s ease;
-      z-index: 1000;
-    }
-    .nav-menu.active {
-      right: 0;
-    }
-    .nav-menu li {
-      margin: 1.5rem 0;
-    }
-    .hero h1 {
-      font-size: 2rem;
-    }
-    .hero p {
-      font-size: 1rem;
-    }
-    .testimonial-slider {
-      justify-content: flex-start;
-    }
-    .testimonial-card {
-      min-width: 280px;
-    }
-  }
+}
 </style>
 
+<svg class="svg-sprite">
+  <symbol id="icon-battery" viewBox="0 0 24 24">
+    <rect x="1" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <rect x="20" y="9" width="2" height="6" rx="1" fill="currentColor"/>
+    <rect x="4" y="9" width="10" height="6" fill="currentColor"/>
+  </symbol>
+  <symbol id="icon-phone" viewBox="0 0 24 24">
+    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+  <symbol id="icon-envelope" viewBox="0 0 24 24">
+    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+  <symbol id="icon-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+  </symbol>
+</svg>
 
-  <div class="container">
-    <div class="header-content">
-      <div class="logo">مرکز تعمیرات نوین برق خودرو</div>
-      <div class="menu-toggle" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
+
+  <div class="logo">
+    <div class="logo-icon"></div>
+    <div class="logo-text">مرکز تعمیرات<br/>نوین برق خودرو</div>
+  </div>
+  <div class="header-actions">
+    <div class="battery-progress" onclick="scrollToContact()">
+      <div class="battery-fill"></div>
+      <div class="battery-percentage">۰٪</div>
+    </div>
+    <a href="tel:02191021500" class="phone">۰۲۱–۹۱۰۲۱۵۰۰</a>
+    <button class="menu-toggle" aria-label="منو" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+
+<div class="menu-overlay" onclick="closeMenu()"></div>
+<div class="menu-panel">
+  <button class="menu-close" onclick="closeMenu()"></button>
+  <ul class="menu-list">
+    <li class="menu-item"><a href="#home" class="menu-link"><span class="menu-number">۰۱</span>خانه</a></li>
+    <li class="menu-item"><a href="#services" class="menu-link"><span class="menu-number">۰۲</span>خدمات</a></li>
+    <li class="menu-item"><a href="#lab" class="menu-link"><span class="menu-number">۰۳</span>آزمایشگاه</a></li>
+    <li class="menu-item"><a href="#about" class="menu-link"><span class="menu-number">۰۴</span>درباره ما</a></li>
+    <li class="menu-item"><a href="#contact" class="menu-link"><span class="menu-number">۰۵</span>تماس با ما</a></li>
+    <li class="menu-item"><a href="#faq" class="menu-link"><span class="menu-number">۰۶</span>سوالات متداول</a></li>
+  </ul>
+  <div class="menu-footer">
+    <div class="menu-contact-item">
+      <svg width="20" height="20"><use href="#icon-phone"></use></svg>
+      ۰۲۱–۹۱۰۲۱۵۰۰
+    </div>
+    <div class="menu-contact-item">
+      <svg width="20" height="20"><use href="#icon-envelope"></use></svg>
+      info@evrepair.center
+    </div>
+    <div class="menu-contact-item">
+      <svg width="20" height="20"><use href="#icon-clock"></use></svg>
+      شنبه تا پنجشنبه ۹ تا ۱۹
+    </div>
+  </div>
+</div>
+
+<section id="home" class="hero">
+  <div class="hero-content">
+    <span class="hero-label">تخصصی و تضمینی</span>
+    <h1>تعمیرات تخصصی خودروهای برقی؛ از سلول <span>باتری</span> تا چرخ</h1>
+    <p class="hero-subtitle">تیم ما با سال‌ها تجربه در حوزه الکترونیک قدرت، خدمات پیشرفته‌ای را برای خودروهای برقی شما ارائه می‌دهد.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">دریافت مشاوره رایگان</a>
+      <a href="#services" class="btn-secondary">مشاهده خدمات</a>
+    </div>
+    <div class="trust-bar">
+      <div class="trust-item">گارانتی کتبی ۶ ماهه</div>
+      <div class="trust-item">دیاگ اولین بازدید رایگان</div>
+      <div class="trust-item">قطعات اورجینال</div>
+    </div>
+  </div>
+  <div class="hero-graphic">
+    <svg class="hero-svg" viewBox="0 0 920 470" xmlns="http://www.w3.org/2000/svg">
+      <g class="bg-circle" style="transform-origin: 460 235;">
+        <circle cx="460" cy="235" r="200" fill="none" stroke="rgba(99, 186, 219, 0.1)" stroke-width="1" stroke-dasharray="10 20"/>
+        <circle cx="460" cy="235" r="150" fill="none" stroke="rgba(99, 186, 219, 0.1)" stroke-width="1" stroke-dasharray="5 15"/>
+      </g>
+      <g class="bg-circle" style="transform-origin: 460 235;">
+        <circle cx="460" cy="235" r="250" fill="none" stroke="rgba(99, 186, 219, 0.05)" stroke-width="1" stroke-dasharray="20 30"/>
+      </g>
+      
+      <g class="road">
+        <line x1="0" y1="350" x2="920" y2="350" stroke="rgba(122, 175, 222, 0.18)" stroke-width="2" class="road-line"/>
+        <ellipse cx="460" cy="380" rx="200" ry="40" fill="rgba(0, 0, 0, 0.2)"/>
+      </g>
+      
+      <g class="car" style="transform-origin: 460 235;">
+        <g class="part inverter" tabindex="0" role="button" onclick="selectPart('inverter')">
+          <rect x="420" y="200" width="80" height="40" rx="5" fill="rgba(10, 46, 92, 0.8)" stroke="#63BADB" stroke-width="1"/>
+          <text x="460" y="225" text-anchor="middle" fill="#EAF3FB" font-size="12">اینورتر</text>
+        </g>
+        
+        <g class="part battery" tabindex="0" role="button" onclick="selectPart('battery')">
+          <rect x="350" y="180" width="100" height="80" rx="5" fill="rgba(10, 46, 92, 0.8)" stroke="#63BADB" stroke-width="1"/>
+          <g class="cells">
+            <rect x="360" y="190" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+            <rect x="405" y="190" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+            <rect x="450" y="190" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+            <rect x="360" y="225" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+            <rect x="405" y="225" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+            <rect x="450" y="225" width="35" height="25" rx="3" fill="none" stroke="#63BADB" stroke-width="1" class="cell"/>
+          </g>
+          <text x="400" y="275" text-anchor="middle" fill="#EAF3FB" font-size="12">پکیج باتری</text>
+        </g>
+        
+        <g class="part motor" tabindex="0" role="button" onclick="selectPart('motor')">
+          <circle cx="550" cy="220" r="30" fill="rgba(10, 46, 92, 0.8)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="550" cy="220" r="20" fill="none" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="550" cy="220" r="10" fill="none" stroke="#63BADB" stroke-width="1"/>
+          <text x="550" y="265" text-anchor="middle" fill="#EAF3FB" font-size="12">موتور</text>
+        </g>
+        
+        <g class="part port" tabindex="0" role="button" onclick="selectPart('port')">
+          <rect x="280" y="210" width="40" height="30" rx="5" fill="rgba(10, 46, 92, 0.8)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="295" cy="225" r="5" fill="#C9538F" class="led"/>
+          <circle cx="305" cy="225" r="5" fill="#C9538F" class="led"/>
+          <text x="300" y="260" text-anchor="middle" fill="#EAF3FB" font-size="12">شارژر</text>
+        </g>
+        
+        <g class="car-body">
+          <path d="M300 250 L300 210 Q300 200 310 200 L610 200 Q620 200 620 210 L620 250 Q620 260 610 260 L310 260 Q300 260 300 250 Z" fill="rgba(10, 46, 92, 0.9)" stroke="#63BADB" stroke-width="1"/>
+          <path d="M620 220 L670 220 L670 240 L620 240 Z" fill="rgba(10, 46, 92, 0.9)" stroke="#63BADB" stroke-width="1"/>
+          <rect x="320" y="210" width="80" height="40" rx="5" fill="rgba(122, 175, 222, 0.1)" stroke="#63BADB" stroke-width="1"/>
+          <rect x="520" y="210" width="80" height="40" rx="5" fill="rgba(122, 175, 222, 0.1)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="340" cy="280" r="25" fill="rgba(10, 46, 92, 0.9)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="590" cy="280" r="25" fill="rgba(10, 46, 92, 0.9)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="340" cy="280" r="15" fill="none" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="590" cy="280" r="15" fill="none" stroke="#63BADB" stroke-width="1"/>
+        </g>
+        
+        <g class="charging-station">
+          <rect x="50" y="180" width="60" height="120" rx="5" fill="rgba(10, 46, 92, 0.8)" stroke="#63BADB" stroke-width="1"/>
+          <rect x="60" y="190" width="40" height="60" rx="3" fill="rgba(122, 175, 222, 0.1)" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="70" cy="270" r="5" fill="#C9538F" class="led"/>
+          <circle cx="90" cy="270" r="5" fill="#C9538F" class="led"/>
+        </g>
+        
+        <g class="cable">
+          <path d="M110 240 Q200 220 280 225" fill="none" stroke="#63BADB" stroke-width="2" stroke-dasharray="5 5"/>
+          <circle cx="110" cy="240" r="3" fill="#C9538F" class="cable-dot"/>
+          <circle cx="150" cy="232" r="3" fill="#C9538F" class="cable-dot"/>
+          <circle cx="190" cy="227" r="3" fill="#C9538F" class="cable-dot"/>
+          <circle cx="230" cy="226" r="3" fill="#C9538F" class="cable-dot"/>
+          <circle cx="270" cy="225" r="3" fill="#C9538F" class="cable-dot"/>
+        </g>
+        
+        <text x="650" y="200" fill="#EAF3FB" font-size="14">شارژر AC</text>
+        <text x="400" y="170" text-anchor="middle" fill="#EAF3FB" font-size="14">۴۸ کیلووات‌ساعت</text>
+        <text x="550" y="170" text-anchor="middle" fill="#EAF3FB" font-size="14">موتور ۱۳۰ کیلووات</text>
+      </g>
+      <text x="460" y="420" text-anchor="middle" fill="#A9C1D9" font-size="14">نشانگر را روی قطعات خودرو ببرید</text>
+    </svg>
+  </div>
+</section>
+
+<section class="brands-section">
+  <div class="brands-marquee">
+    <div class="brand-logo">تسلا</div>
+    <div class="brand-logo">ب‌ام‌و i</div>
+    <div class="brand-logo">نیسان لیف</div>
+    <div class="brand-logo">پژو e-208</div>
+    <div class="brand-logo">آیونیق ۵</div>
+    <div class="brand-logo">رنو زوئی</div>
+    <div class="brand-logo">کیا e-نیرو</div>
+    <div class="brand-logo">مرسدس EQ</div>
+    <div class="brand-logo">تسلا</div>
+    <div class="brand-logo">ب‌ام‌و i</div>
+    <div class="brand-logo">نیسان لیف</div>
+    <div class="brand-logo">پژو e-208</div>
+    <div class="brand-logo">آیونیق ۵</div>
+    <div class="brand-logo">رنو زوئی</div>
+    <div class="brand-logo">کیا e-نیرو</div>
+    <div class="brand-logo">مرسدس EQ</div>
+  </div>
+</section>
+
+<section id="services" class="services">
+  <h2>خدمات تخصصی ما</h2>
+  <div class="services-grid">
+    <div class="service-card" data-number="۱">
+      <div class="service-card-badge">پرفروش‌ترین</div>
+      <div class="service-card-icon">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <rect x="10" y="15" width="40" height="30" rx="5" fill="none" stroke="#63BADB" stroke-width="2"/>
+          <rect x="15" y="20" width="30" height="20" rx="3" fill="none" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="20" cy="35" r="3" fill="#C9538F"/>
+          <circle cx="30" cy="35" r="3" fill="#C9538F"/>
+          <circle cx="40" cy="35" r="3" fill="#C9538F"/>
+          <text x="30" y="55" text-anchor="middle" fill="#EAF3FB" font-size="10">باتری</text>
+        </svg>
       </div>
-      <ul class="nav-menu" id="navMenu">
-        <li><a href="#services">خدمات</a></li>
-        <li><a href="#about">درباره ما</a></li>
-        <li><a href="#testimonials">نظرات</a></li>
-        <li><a href="#contact">تماس</a></li>
-        <li><a href="#faq">سوالات</a></li>
+      <h3>تعمیرات تخصصی باتری</h3>
+      <p class="service-card-description">رفع مشکلات باتری‌های لیتیوم‌یون و تعویض ماژول‌های معیوب با ضمانت‌نامه معتبر</p>
+      <ul class="service-card-features">
+        <li>تست سلول‌به‌سلول</li>
+        <li>بالانس باتری</li>
+        <li>تعویض ماژول اورجینال</li>
+        <li>گزارش سلامت کامل</li>
       </ul>
-    </div>
-  </div>
-
-
-<section class="hero">
-  <div class="container">
-    <h1>تخصصی‌ترین خدمات تعمیرات خودروهای برقی</h1>
-    <p>با بیش از ۱۰ سال تجربه در زمینه تعمیرات خودروهای بنزینی، اکنون با تیمی متخصص در زمینه فناوری‌های برقی، تخصص خود را به دنیای خودروهای الکتریکی گسترش داده‌ایم.</p>
-    <a href="#contact" class="btn">درخواست مشاوره رایگان</a>
-  </div>
-</section>
-
-<section class="services" id="services">
-  <div class="container">
-    <h2>خدمات اصلی</h2>
-    <div class="services-grid">
-      <div class="service-card">
-        <h3>تعمیرات تخصصی باتری</h3>
-        <p>رفع مشکلات باتری‌های لیتیوم‌یون و تعویض با ضمانت نامه معتبر. تیم ما با استفاده از پیشرفته‌ترین تجهیزات، باتری خودروی شما را به بهترین شکل تعمیر یا تعویض می‌کند.</p>
-      </div>
-      <div class="service-card">
-        <h3>بررسی و عیب‌یابی سیستم برقی</h3>
-        <p>تشخیص و رفع عیوب موتور، شارژر و کنترلر با دقت بالا. ما تمام سیستم‌های برقی خودروی شما را به صورت کامل بررسی کرده و مشکل را در سریع‌ترین زمان ممکن رفع می‌کنیم.</p>
-      </div>
-      <div class="service-card">
-        <h3>نصب و بهینه‌سازی شارژر منزل</h3>
-        <p>نصب و راه‌اندازی انواع شارژرهای خانگی و صنعتی با بهترین قیمت و کیفیت. ما شارژر متناسب با خودرو و نیازهای شما را نصب و نحوه استفاده بهینه را آموزش می‌دهیم.</p>
+      <div class="service-card-actions">
+        <a href="#contact" onclick="selectService('battery')" class="btn-primary">درخواست این خدمت</a>
+        <a href="#home" onclick="highlightPart('battery')" class="btn-secondary">دیدن قطعه در خودرو</a>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="about" id="about">
-  <div class="container">
-    <div class="about-content">
-      <h2>درباره ما</h2>
-      <p>ما با بیش از ۱۰ سال تجربه در زمینه تعمیرات خودروهای بنزینی، اکنون با تیمی متخصص در زمینه فناوری‌های برقی، تخصص خود را به دنیای خودروهای الکتریکی گسترش داده‌ایم. هدف ما ارائه خدمات باکیفیت، شفاف و مطابق با استانداردهای جهانی است.</p>
-    </div>
-  </div>
-</section>
-
-<section class="testimonials" id="testimonials">
-  <div class="container">
-    <h2>نظرات مشتریان</h2>
-    <div class="testimonial-slider">
-      <div class="testimonial-card">
-        <p class="testimonial-text">مشکل باتری پژو e-208 من در کمتر از دو ساعت حل شد. بسیار حرفه‌ای و دقیق عمل کردند.</p>
-        <p class="testimonial-author">آقای محمدی</p>
-        <p class="testimonial-city">تهران</p>
-      </div>
-      <div class="testimonial-card">
-        <p class="testimonial-text">نصب شارژر خانگی توسط این تیم، تجربه بسیار خوبی بود. راهنمایی کامل و قیمت مناسب.</p>
-        <p class="testimonial-author">خانم رضایی</p>
-        <p class="testimonial-city">کرج</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="contact" id="contact">
-  <div class="container">
-    <h2>تماس با ما</h2>
-    <div class="contact-info">
-      <div class="contact-item">
-        <div class="contact-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-        </div>
-        <div>
-          <h3>آدرس</h3>
-          <p>تهران، خیابان آزادی، خیابان فلسطین، پلاک ۱۲۰</p>
-        </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-          </svg>
-        </div>
-        <div>
-          <h3>تلفن</h3>
-          <p>۰۲۱-۹۱۰۲-۱۵۰۰</p>
-        </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </div>
-        <div>
-          <h3>ایمیل</h3>
-          <p>info@electriccarfix.com</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="faq" id="faq">
-  <div class="container">
-    <h2>پرسش‌های متداول</h2>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>هزینه تعمیر باتری چقدر است؟</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
+    
+    <div class="service-card" data-number="۲">
+      <div class="service-card-icon">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="20" fill="none" stroke="#63BADB" stroke-width="2"/>
+          <path d="M30 10 L35 25 L50 30 L35 35 L30 50 L25 35 L10 30 L25 25 Z" fill="none" stroke="#63BADB" stroke-width="1.5"/>
+          <path d="M30 15 L32 28 L45 30 L32 32 L30 45 L28 32 L15 30 L28 28 Z" fill="none" stroke="#C9538F" stroke-width="1"/>
+          <text x="30" y="55" text-anchor="middle" fill="#EAF3FB" font-size="10">دیاگ</text>
         </svg>
       </div>
-      <div class="faq-answer">
-        <p>قیمت تعمیر باتری بسته به نوع و میزان آسیب، بین ۵,۰۰۰,۰۰۰ تا ۲۵,۰۰۰,۰۰۰ تومان متغیر است. پس از عیب‌یابی دقیق، هزینه نهایی به شما اعلام خواهد شد.</p>
+      <h3>بررسی و عیب‌یابی سیستم برقی</h3>
+      <p class="service-card-description">تشخیص و رفع عیوب موتور، شارژر و کنترلر با دیاگ اختصاصی</p>
+      <ul class="service-card-features">
+        <li>خوانش کدهای خطا</li>
+        <li>آنالیز داده‌های سنسور</li>
+        <li>کالیبراسیون سیستم</li>
+      </ul>
+      <div class="service-card-actions">
+        <a href="#contact" onclick="selectService('diagnostic')" class="btn-primary">درخواست این خدمت</a>
+        <a href="#home" onclick="highlightPart('diagnostic')" class="btn-secondary">دیدن قطعه در خودرو</a>
       </div>
     </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>خدمات شما شامل گارانتی است؟</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
+    
+    <div class="service-card" data-number="۳">
+      <div class="service-card-icon">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <rect x="10" y="15" width="40" height="35" rx="5" fill="none" stroke="#63BADB" stroke-width="2"/>
+          <rect x="15" y="20" width="30" height="5" rx="2" fill="none" stroke="#63BADB" stroke-width="1"/>
+          <circle cx="20" cy="32" r="2" fill="#C9538F"/>
+          <circle cx="30" cy="32" r="2" fill="#C9538F"/>
+          <circle cx="40" cy="32" r="2" fill="#C9538F"/>
+          <path d="M25 40 L35 40" stroke="#63BADB" stroke-width="1.5"/>
+          <text x="30" y="55" text-anchor="middle" fill="#EAF3FB" font-size="10">شارژر</text>
         </svg>
       </div>
-      <div class="faq-answer">
-        <p>بله، تمام خدمات و قطعات تعویض شده دارای گارانتی ۶ ماهه هستند. در صورت بروز هرگونه مشکل در این دوره، خدمات به صورت رایگان ارائه خواهد شد.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>آیا برای خودروهای خارجی هم خدمات ارائه می‌دهید؟</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
-      <div class="faq-answer">
-        <p>بله، ما خدمات تخصصی برای برندهایی مانند تسلا، ب‌ام‌و i و نیسان لیف ارائه می‌دهیم. تیم ما با تمام مدل‌های خودروهای برقی آشناست و می‌تواند نیازهای شما را برطرف کند.</p>
+      <h3>نصب و بهینه‌سازی شارژر منزل</h3>
+      <p class="service-card-description">نصب خانگی و صنعتی با مشاوره فنی و تضمین کیفیت</p>
+      <ul class="service-card-features">
+        <li>مشاوره توان برق</li>
+        <li>نصب استاندارد وال‌باکس</li>
+        <li>راه‌اندازی نیمه‌صنعتی</li>
+      </ul>
+      <div class="service-card-actions">
+        <a href="#contact" onclick="selectService('charger')" class="btn-primary">درخواست این خدمت</a>
+        <a href="#home" onclick="highlightPart('charger')" class="btn-secondary">دیدن قطعه در خودرو</a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="cta">
-  <div class="container">
-    <h2>برای دریافت مشاوره رایگان و تعیین وقت بازدید از مرکز، همین حالا با ما تماس بگیرید یا فرم زیر را پر کنید. تیم ما در کمترین زمان با شما خواهد بود.</h2>
-    <a href="#contact" class="btn">تماس با ما</a>
+<section id="lab" class="lab">
+  <h2>آزمایشگاه سه‌بعدی پکیج باتری</h2>
+  <div class="lab-container">
+    <div class="lab-scene-container">
+      
+      <div id="three-canvas" style="width: 100%; height: 100%;"></div>
+    </div>
+    <div class="lab-controls">
+      <div class="lab-control-item active" onclick="highlightLabComponent('cells')">
+        <h4>سلول‌های باتری</h4>
+        <p>۳۲ سلول لیتیوم‌یون ۲۱۷۰۰ با مانیتورینگ مستقل</p>
+      </div>
+      <div class="lab-control-item" onclick="highlightLabComponent('cooling')">
+        <h4>سیستم خنک‌کاری</h4>
+        <p>پلت مایع با دو پمپ و سنسور دما</p>
+      </div>
+      <div class="lab-control-item" onclick="highlightLabComponent('bms')">
+        <h4>مدیریت باتری (BMS)</h4>
+        <p>برد کنترل با چیپ STM32 و الگوریتم بالانس</p>
+      </div>
+      <div class="lab-control-item" onclick="highlightLabComponent('terminals')">
+        <h4>ترمینال‌های قدرت</h4>
+        <p>اتصالات مسی با ظرفیت ۴۰۰ آمپر</p>
+      </div>
+    </div>
   </div>
+</section>
+
+<section id="contact" class="contact">
+  <form class="contact-form" onsubmit="handleSubmit(event)">
+    <h2 style="text-align: center; margin-bottom: 32px; font-size: 2rem;">درخواست مشاوره و خدمات</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">نام و نام خانوادگی</label>
+        <input type="text" id="name" name="name" required="required"/>
+      </div>
+      <div class="form-group">
+        <label for="phone">شماره تماس</label>
+        <input type="tel" id="phone" name="phone" required="required"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="car">مدل خودرو</label>
+      <input type="text" id="car" name="car" placeholder="مثال: Tesla Model 3"/>
+    </div>
+    <div class="form-group">
+      <label for="service">خدمات مورد نیاز</label>
+      <select id="service" name="service">
+        <option value="">لطفاً یک خدمت را انتخاب کنید</option>
+        <option value="battery">تعمیرات باتری</option>
+        <option value="diagnostic">عیب‌یابی سیستم</option>
+        <option value="charger">نصب شارژر منزل</option>
+        <option value="other">سایر خدمات</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="message">توضیحات</label>
+      <textarea id="message" name="message" rows="4" placeholder="مشکل یا درخواست خود را توضیح دهید..."></textarea>
+    </div>
+    <button type="submit" class="form-submit">ارسال درخواست</button>
+  </form>
 </section>
 </body>
 </html>
