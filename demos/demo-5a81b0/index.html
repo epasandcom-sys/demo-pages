@@ -57,7 +57,7 @@ h3{font-weight:700}
 .btn-ghost{border:1px solid var(--line)}
 .btn-ghost:hover{border-color:var(--blue);color:var(--blue-2);transform:translateY(-2px)}
 
-/* reveal با اسکرول — فقط اگر مرورگر پشتیبانی کند، وگرنه عناصر همیشه پیداست */
+/* ظهور با اسکرول (بهبود تدریجی — بدون پشتیبانی، همه چیز پیداست) */
 @supports (animation-timeline: view()){
   .rv{animation:rvIn both;animation-timeline:view();animation-range:entry 0% entry 55%}
   @keyframes rvIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
@@ -71,6 +71,16 @@ h3{font-weight:700}
 .brand-txt b{display:block;font-family:var(--fh);font-weight:800;font-size:1.05rem;line-height:1.4}
 .brand-txt span{display:block;font-size:.72rem;color:var(--muted);line-height:1.4}
 .head-actions{display:flex;align-items:center;gap:12px}
+/* باتری پیشرفت مطالعه — فقط با scroll-timeline */
+.batt{display:inline-flex;padding:6px;border-radius:8px}
+.batt svg{width:30px;height:16px}
+.batt .b-shell{fill:none;stroke:var(--muted);stroke-width:1.5}
+.batt .b-cap{fill:var(--muted);animation:ledBlink 2.6s ease-in-out infinite}
+.batt .b-fill{fill:var(--blue-2);transform:scaleX(.35);transform-origin:right center}
+@supports (animation-timeline: scroll()){
+  .batt .b-fill{animation:battFill linear both;animation-timeline:scroll(root)}
+  @keyframes battFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
 .head-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--fh);font-weight:700;font-size:.9rem;background:var(--magenta);color:#fff;padding:10px 18px;border-radius:10px;transition:background .25s,transform .25s var(--ease)}
 .head-cta:hover{background:var(--magenta-2);transform:translateY(-2px)}
 .head-tel{display:inline-flex;align-items:center;gap:8px;font-family:var(--fh);font-weight:700;font-size:.95rem;border:1px solid var(--line);padding:9px 16px;border-radius:10px;transition:border-color .25s,color .25s}
@@ -80,10 +90,11 @@ h3{font-weight:700}
 .menu-btn svg{width:22px;height:22px}
 .menu-btn:hover{border-color:var(--blue);background:var(--surface)}
 
-/* ================= منوی کشویی (با :target — بدون JS) ================= */
+/* ================= منوی کشویی (:target — بدون JS) ================= */
 .drawer{position:fixed;top:0;bottom:0;right:0;z-index:80;width:min(380px,88vw);background:var(--surface);border-left:1px solid var(--line-soft);transform:translateX(105%);transition:transform .5s var(--ease);display:flex;flex-direction:column}
 .drawer:target{transform:none}
-.scrim{position:fixed;inset:0;z-index:70;background:rgba(4,12,22,.6);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;cursor:pointer}
+body:has(#menu:target){overflow:hidden}
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(4,12,22,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;cursor:pointer}
 #menu:target ~ .scrim{opacity:1;visibility:visible}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line-soft)}
 .drawer-head b{font-family:var(--fh);font-weight:800}
@@ -99,6 +110,7 @@ h3{font-weight:700}
 .drawer:target .drawer-nav a:nth-child(4){animation-delay:.29s}
 .drawer:target .drawer-nav a:nth-child(5){animation-delay:.36s}
 .drawer:target .drawer-nav a:nth-child(6){animation-delay:.43s}
+.drawer:target .drawer-nav a:nth-child(7){animation-delay:.5s}
 @keyframes navIn{to{opacity:1;transform:none}}
 .drawer-nav a i{font-style:normal;font-size:.8rem;color:var(--muted);min-width:24px}
 .drawer-nav a svg{width:17px;height:17px;margin-inline-start:auto;color:var(--muted);transition:transform .3s var(--ease),color .3s}
@@ -128,6 +140,12 @@ h3{font-weight:700}
 .stage-hint svg{width:13px;height:13px;color:var(--magenta-2)}
 .stage-cap{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 8px 2px;font-size:.78rem;color:var(--muted)}
 
+@supports (animation-timeline: view()){
+  .hero .stage{animation:heroLift both;animation-timeline:view();animation-range:entry 0% exit 85%}
+  @keyframes heroLift{from{transform:translateY(26px)}to{transform:translateY(-34px)}}
+}
+
+/* گرافیک خودرو */
 .ev-bg .ring{fill:none;stroke:rgba(46,134,171,.16);stroke-dasharray:4 10;transform-box:fill-box;transform-origin:center}
 .ev-bg .r1{animation:spin 70s linear infinite}
 .ev-bg .r2{animation:spin 50s linear infinite reverse}
@@ -137,6 +155,12 @@ h3{font-weight:700}
 .road-base{stroke:rgba(122,175,222,.28);stroke-width:2}
 .road-dash{stroke:rgba(99,186,219,.30);stroke-width:2;stroke-dasharray:34 28;animation:roadMove 1.5s linear infinite}
 @keyframes roadMove{to{stroke-dashoffset:-62}}
+.scan{animation:scan 6.4s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes scan{0%,14%{transform:translateX(64px)}52%,66%{transform:translateX(660px)}92%,100%{transform:translateX(64px)}}
+.flow-base{fill:none;stroke:rgba(99,186,219,.28);stroke-width:2}
+.flow-dash{fill:none;stroke:var(--blue-2);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:2 16;animation:cableFlow 1.2s linear infinite}
+.pulse{fill:none;stroke:var(--blue-2);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.5);opacity:.85}70%,100%{transform:scale(2.3);opacity:0}}
 .part{cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .5s var(--ease)}
 .part .halo{fill:none;stroke:var(--magenta-2);stroke-width:2;opacity:0;transition:opacity .35s}
 .part:hover .halo,.part:focus-visible .halo,.part:target .halo{opacity:.95}
@@ -178,13 +202,17 @@ h3{font-weight:700}
 
 /* ================= خدمات ================= */
 .svc-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}
-.svc-card{background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:clamp(20px,2.6vw,28px);display:flex;flex-direction:column;gap:14px;transition:transform .4s var(--ease),border-color .35s,background .35s}
+.svc-card{position:relative;background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:clamp(20px,2.6vw,28px);display:flex;flex-direction:column;gap:14px;transition:transform .4s var(--ease),border-color .35s,background .35s}
+.svc-card::before{content:"";position:absolute;inset-inline-start:0;top:18px;bottom:18px;width:3px;border-radius:99px;background:var(--magenta);opacity:0;transition:opacity .35s}
+.svc-card:hover::before{opacity:1}
 .svc-card:hover{transform:translateY(-5px);border-color:var(--line);background:var(--surface-2)}
 .svc-card--hero{grid-row:span 2}
 .svc-top{display:flex;align-items:center;gap:14px}
 .svc-num{font-family:var(--fh);font-weight:800;font-size:1.4rem;color:var(--muted);opacity:.5}
-.svc-ic{width:46px;height:46px;flex:none;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center}
-.svc-ic svg{width:23px;height:23px;color:var(--blue-2)}
+.svc-ic{width:46px;height:46px;flex:none;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;transition:border-color .3s,transform .4s var(--ease)}
+.svc-ic svg{width:23px;height:23px;color:var(--blue-2);transition:color .3s}
+.svc-card:hover .svc-ic{border-color:var(--magenta);transform:rotate(-8deg)}
+.svc-card:hover .svc-ic svg{color:var(--magenta-2)}
 .svc-card h3{font-size:clamp(1.05rem,1.7vw,1.3rem);flex:1}
 .svc-scene{background:var(--bg);border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;transition:transform .5s var(--ease)}
 .svc-card:hover .svc-scene{transform:scale(1.015)}
@@ -211,24 +239,27 @@ h3{font-weight:700}
 .sc-bar.b2{animation-delay:.3s}.sc-bar.b3{animation-delay:.6s}
 @keyframes pbar{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
 
-/* ================= نمای سه‌بعدی ایزومتریک (بدون JS) ================= */
+/* ================= نمای ایزومتریک پکیج باتری ================= */
 .lab-sec{border-top:1px solid var(--line-soft)}
 .lab-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,4vw,56px);align-items:stretch}
 .lab-list{display:flex;flex-direction:column;gap:12px}
 .lab-item{display:flex;align-items:flex-start;gap:16px;padding:18px 20px;border:1px solid var(--line-soft);border-radius:14px;transition:border-color .3s,background .3s,transform .3s var(--ease)}
 .lab-item:hover{transform:translateX(-4px);border-color:var(--line)}
-.lab-item .li-ic{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:11px;display:grid;place-items:center}
-.lab-item .li-ic svg{width:21px;height:21px;color:var(--blue-2)}
+.lab-item .li-ic{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:11px;display:grid;place-items:center;transition:border-color .3s}
+.lab-item .li-ic svg{width:21px;height:21px;color:var(--blue-2);transition:color .3s}
 .lab-item b{display:block;font-family:var(--fh);font-weight:700;font-size:1rem}
 .lab-item p{color:var(--muted);font-size:.86rem;margin-top:2px}
-.lab-item:hover,.lab-wrap:has(#lab-cells:target) .lab-item[href="#lab-cells"],
+.lab-item:hover,
+.lab-wrap:has(#lab-cells:target) .lab-item[href="#lab-cells"],
 .lab-wrap:has(#lab-cooling:target) .lab-item[href="#lab-cooling"],
 .lab-wrap:has(#lab-bms:target) .lab-item[href="#lab-bms"],
 .lab-wrap:has(#lab-term:target) .lab-item[href="#lab-term"]{background:var(--surface);border-color:var(--magenta)}
+.lab-item:hover .li-ic,
 .lab-wrap:has(#lab-cells:target) .lab-item[href="#lab-cells"] .li-ic,
 .lab-wrap:has(#lab-cooling:target) .lab-item[href="#lab-cooling"] .li-ic,
 .lab-wrap:has(#lab-bms:target) .lab-item[href="#lab-bms"] .li-ic,
 .lab-wrap:has(#lab-term:target) .lab-item[href="#lab-term"] .li-ic{border-color:var(--magenta)}
+.lab-item:hover .li-ic svg,
 .lab-wrap:has(#lab-cells:target) .lab-item[href="#lab-cells"] .li-ic svg,
 .lab-wrap:has(#lab-cooling:target) .lab-item[href="#lab-cooling"] .li-ic svg,
 .lab-wrap:has(#lab-bms:target) .lab-item[href="#lab-bms"] .li-ic svg,
@@ -246,11 +277,17 @@ h3{font-weight:700}
 .lab-stage:hover #lab-cooling,#lab-cooling:target{transform:translateY(-12px)}
 .lab-stage:hover #lab-bms,#lab-bms:target{transform:translate(16px,-6px)}
 .lab-stage:hover #lab-term,#lab-term:target{transform:translate(-14px,-4px)}
-.cells3d use{transform-box:fill-box;transform-origin:center;transition:transform .3s var(--ease),filter .3s;animation:cellGlow 2.8s ease-in-out infinite}
+.cells3d use{transform-box:fill-box;transform-origin:center;transition:transform .3s var(--ease),filter .3s;animation:cellGlow 2.8s ease-in-out infinite;cursor:pointer}
 @keyframes cellGlow{0%,100%{opacity:.82}50%{opacity:1}}
 .cells3d use:hover{transform:translateY(-5px) scale(1.16);filter:drop-shadow(0 0 8px rgba(201,83,143,.85));animation-play-state:paused}
 #lab-cells:target use{filter:drop-shadow(0 0 5px rgba(201,83,143,.6))}
 #lab-cooling:target .cool-top{stroke:var(--magenta-2)}
+.cool-flow{fill:none;stroke:var(--blue-2);stroke-width:3.2;stroke-linecap:round;stroke-dasharray:3 17;animation:coolFlow 1.5s linear infinite}
+@keyframes coolFlow{to{stroke-dashoffset:-40}}
+.bms-flow{fill:none;stroke:var(--magenta-2);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:2 16;animation:cableFlow 1.2s linear infinite}
+#lab-bms .chip{animation:ledBlink 2.2s ease-in-out infinite}
+#lab-bms .chip:nth-of-type(2){animation-delay:.4s}
+#lab-bms .chip:nth-of-type(3){animation-delay:.8s}
 #lab-bms:target .chip{fill:var(--magenta-2)}
 #lab-term:target .term{fill:var(--magenta-2)}
 .tag3d{opacity:0;transition:opacity .5s,transform .5s var(--ease);transform:translateY(8px)}
@@ -259,6 +296,24 @@ h3{font-weight:700}
 .tag3d text{font-size:12.5px;fill:var(--text);font-weight:700}
 .tip-cells line{stroke:var(--magenta-2);stroke-width:1.4}
 
+/* ================= مسیر سرویس (جدید) ================= */
+.proc{border-top:1px solid var(--line-soft)}
+.steps{list-style:none;position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+.steps::before{content:"";position:absolute;top:38px;inset-inline:30px;border-top:2px dashed rgba(99,186,219,.3)}
+.steps::after{content:"";position:absolute;top:33px;inset-inline-start:26px;width:11px;height:11px;border-radius:50%;background:var(--blue-2);box-shadow:0 0 12px rgba(99,186,219,.8);animation:stepDot 8s linear infinite alternate}
+@keyframes stepDot{from{inset-inline-start:26px}to{inset-inline-start:calc(100% - 37px)}}
+.step{position:relative;background:var(--surface);border:1px solid var(--line-soft);border-radius:16px;padding:24px 22px;transition:transform .4s var(--ease),border-color .3s,background .3s}
+.step:hover{transform:translateY(-5px);border-color:var(--line);background:var(--surface-2)}
+.step-num{position:absolute;top:16px;inset-inline-end:18px;font-family:var(--fh);font-weight:900;font-size:2.4rem;line-height:1;color:transparent;-webkit-text-stroke:1.2px rgba(122,175,222,.35);transition:-webkit-text-stroke-color .3s}
+.step:hover .step-num{-webkit-text-stroke-color:var(--magenta-2)}
+.step-ic{width:50px;height:50px;border:1px solid var(--line);border-radius:13px;display:grid;place-items:center;background:var(--bg);transition:border-color .3s;margin-bottom:14px}
+.step-ic svg{width:24px;height:24px;color:var(--blue-2);transition:color .3s}
+.step:hover .step-ic{border-color:var(--magenta)}
+.step:hover .step-ic svg{color:var(--magenta-2)}
+.step h3{font-size:1.05rem;margin-bottom:6px}
+.step p{color:var(--muted);font-size:.9rem}
+.step .tagp-txt{display:inline-block;margin-top:12px;font-size:.78rem;font-family:var(--fh);font-weight:700;color:var(--blue-2)}
+
 /* ================= درباره ما ================= */
 .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(36px,5vw,72px);align-items:center}
 .about-copy p{color:var(--muted);margin-bottom:14px}
@@ -266,14 +321,13 @@ h3{font-weight:700}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:20px;overflow:hidden}
 .stat{padding:clamp(24px,3vw,40px) clamp(20px,2.5vw,34px);border-inline-start:1px solid var(--line-soft);border-block-start:1px solid var(--line-soft);transition:background .35s}
 .stat:hover{background:var(--surface)}
-.stat:nth-child(1){border-inline-start:none;border-block-start:none}
-.stat:nth-child(3){border-inline-start:none}
-.stat:nth-child(4){border-block-start:none}
+.stat:nth-child(1),.stat:nth-child(3){border-inline-start:none}
+.stat:nth-child(1),.stat:nth-child(2){border-block-start:none}
 .stat b{display:block;font-family:var(--fh);font-weight:900;font-size:clamp(1.8rem,3.4vw,2.7rem);color:var(--blue-2);line-height:1.3}
 .stat:nth-child(2) b{color:var(--magenta-2)}
 .stat span{color:var(--muted);font-size:.9rem}
 
-/* ================= نظرات (اسلایدر با رادیو — بدون JS) ================= */
+/* ================= نظرات (رادیو — بدون JS) ================= */
 .tsec{border-top:1px solid var(--line-soft)}
 .tstage{position:relative;max-width:780px;min-height:230px}
 .tslide{position:absolute;inset-inline:0;top:0;opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s var(--ease);pointer-events:none}
@@ -296,19 +350,21 @@ h3{font-weight:700}
 .tdots{display:flex;gap:8px}
 .dot{width:9px;height:9px;border-radius:99px;background:var(--line);cursor:pointer;transition:background .3s,width .3s var(--ease)}
 #ts1:checked ~ .tctl .d1,#ts2:checked ~ .tctl .d2{background:var(--magenta);width:26px}
+#ts1:focus-visible ~ .tctl .d1,#ts2:focus-visible ~ .tctl .d2{outline:2px solid var(--blue-2);outline-offset:3px}
 .tcount{font-family:var(--fh);font-weight:700;color:var(--muted);font-size:.9rem;margin-inline-start:auto}
 .tcount b{color:var(--text)}
 .tcount .c2{display:none}
 #ts2:checked ~ .tctl .c1{display:none}
 #ts2:checked ~ .tctl .c2{display:inline}
 
-/* ================= سوالات متداول (آکاردئون با چک‌باکس) ================= */
+/* ================= سوالات متداول ================= */
 .faq-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,4.5vw,64px);align-items:start}
 .faq-list{display:flex;flex-direction:column;gap:12px}
 .faq-item{border:1px solid var(--line-soft);border-radius:14px;transition:border-color .3s,background .3s}
 .faq-item:hover{border-color:var(--line)}
 .faq-item:has(.vh:checked){background:var(--surface);border-color:var(--line)}
 .faq-q{display:flex;align-items:center;gap:14px;padding:19px 22px;font-family:var(--fh);font-weight:700;font-size:1.02rem;cursor:pointer;user-select:none}
+.faq-item .vh:focus-visible ~ .faq-q{outline:2px solid var(--blue-2);outline-offset:-2px;border-radius:14px}
 .faq-ic{width:26px;height:26px;flex:none;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;margin-inline-start:auto;transition:transform .4s var(--ease),border-color .3s}
 .faq-ic svg{width:14px;height:14px;color:var(--blue-2)}
 .faq-item .vh:checked ~ .faq-q .faq-ic{transform:rotate(45deg);border-color:var(--magenta)}
@@ -333,6 +389,8 @@ h3{font-weight:700}
 .field textarea{resize:vertical;min-height:88px}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A9C1D9' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,134,171,.18)}
+.field input:user-invalid{border-color:var(--magenta);box-shadow:0 0 0 3px rgba(162,59,114,.15)}
+.field input:valid:not(:placeholder-shown){border-color:rgba(99,186,219,.55)}
 .f-note{font-size:.78rem;color:var(--muted);margin-top:14px;text-align:center}
 .sent-panel{display:none;margin-top:18px;align-items:center;gap:12px;background:rgba(46,134,171,.1);border:1px solid var(--blue);border-radius:13px;padding:15px 18px;font-size:.94rem}
 .sent-panel svg{width:22px;height:22px;flex:none;color:var(--blue-2)}
@@ -362,18 +420,29 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
   .svc-grid{grid-template-columns:1fr}
   .svc-card--hero{grid-row:auto}
   .lab-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr;gap:14px}
+  .steps::before,.steps::after{display:none}
 }
 @media (max-width:900px){.about-grid,.contact-grid,.faq-wrap{grid-template-columns:1fr}}
 @media (max-width:720px){.head-tel{display:none}.stage-hint{position:static;margin:10px 8px 0}}
-@media (max-width:560px){.f-row2{grid-template-columns:1fr}.hero-cta .btn{width:100%}.brand-txt span{display:none}}
+@media (max-width:560px){
+  .f-row2{grid-template-columns:1fr}
+  .hero-cta .btn{width:100%}
+  .brand-txt span{display:none}
+  .steps{grid-template-columns:1fr}
+  .step-num{font-size:2rem}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
 }
+@media print{
+  .site-header,.scrim,.drawer,.marquee,.stage-hint{display:none!important}
+  body{background:#fff;color:#111}
+}
 </style>
 </head>
 <body>
-
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.9 13.5H10L8.7 22l10.4-12.2h-5.5L13 2Z" fill="currentColor"/></symbol>
@@ -395,9 +464,9 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
   <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.8 5L3.4 16.8a2.1 2.1 0 1 0 3 3l5.4-5.5a4.2 4.2 0 0 0 5.1-5.8l-2.9 2.8-2.1-2.1 2.8-2.9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 3 10.5l7 2.5 2.5 7L21 3Z"/><path d="m10 13 4.5-4.5"/></g></symbol>
   <symbol id="i-quote" viewBox="0 0 24 24"><path d="M10.2 5.5C6.5 7.2 4.4 9.8 4.4 13.3c0 2.8 1.8 4.7 4 4.7 2 0 3.5-1.5 3.5-3.4 0-1.8-1.3-3.2-3.1-3.2h-.6c.4-1.8 1.8-3.5 3.6-4.5l-1.6-1.4Zm8.6 0c-3.7 1.7-5.8 4.3-5.8 7.8 0 2.8 1.8 4.7 4 4.7 2 0 3.5-1.5 3.5-3.4 0-1.8-1.3-3.2-3.1-3.2h-.6c.4-1.8 1.8-3.5 3.6-4.5l-1.6-1.4Z" fill="currentColor"/></symbol>
-  <symbol id="i-drag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.5 12 2.5l3 3M9 18.5l3 3 3-3M5.5 9l-3 3 3 3M18.5 9l3 3-3 3"/><circle cx="12" cy="12" r="2.6"/></g></symbol>
   <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V4.8a1.6 1.6 0 0 1 3.2 0V10m0-2.4a1.6 1.6 0 0 1 3.2 0V10m0-1.2a1.6 1.6 0 0 1 3.2 0v4.8c0 4-2.6 6.8-6.6 6.8-3 0-4.4-1.4-6-4.2L4.4 13c-.6-1.1.2-2.4 1.5-2.4.8 0 1.4.4 1.9 1.2L9 13.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></g></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
 </svg>
 
 
@@ -413,6 +482,13 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
       <span class="brand-txt"><b>نوین برق خودرو</b><span>مرکز تخصصی تعمیرات خودروهای برقی</span></span>
     </a>
     <div class="head-actions">
+      <span class="batt" title="پیشرفت مطالعه‌ی صفحه" aria-hidden="true">
+        <svg viewBox="0 0 30 16">
+          <rect class="b-shell" x="1" y="1.2" width="24" height="13.6" rx="3.4"/>
+          <rect class="b-cap" x="26.6" y="5.4" width="2.6" height="5.2" rx="1.2"/>
+          <rect class="b-fill" x="3.2" y="3.4" width="19.6" height="9.2" rx="1.8"/>
+        </svg>
+      </span>
       <a class="head-tel" href="tel:+982191021500"><svg aria-hidden="true"><use href="#i-phone"/></svg><span dir="ltr">۰۲۱ – ۹۱۰۲ ۱۵۰۰</span></a>
       <a class="head-cta" href="#contact">مشاوره رایگان</a>
       <a class="menu-btn" href="#menu" aria-label="باز کردن منو"><svg aria-hidden="true"><use href="#i-menu"/></svg></a>
@@ -430,9 +506,10 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
     <a href="#top"><i>۰۱</i> خانه<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
     <a href="#services"><i>۰۲</i> خدمات اصلی<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
     <a href="#lab"><i>۰۳</i> نمای سه‌بعدی باتری<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    <a href="#about"><i>۰۴</i> درباره ما<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    <a href="#testimonials"><i>۰۵</i> نظرات مشتریان<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    <a href="#contact"><i>۰۶</i> تماس با ما<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a href="#process"><i>۰۴</i> مسیر سرویس<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a href="#about"><i>۰۵</i> درباره ما<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a href="#testimonials"><i>۰۶</i> نظرات مشتریان<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a href="#contact"><i>۰۷</i> تماس با ما<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
   </nav>
   <div class="drawer-foot">
     <p class="df-title">تماس مستقیم</p>
@@ -466,6 +543,11 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
       <div class="stage">
         <span class="stage-hint"><svg aria-hidden="true"><use href="#i-hand"/></svg>نشانگر را روی قطعات ببرید؛ با کلیک، به فرم مشاوره بروید</span>
         <svg class="ev" viewBox="0 0 920 470" role="img" aria-label="نمای اشعه‌ای خودروی برقی با قطعات تعاملی: پکیج باتری، موتور، اینورتر و درگاه شارژ">
+          <defs>
+            <clipPath id="bodyClip">
+              <path d="M108 352 C100 330 104 306 124 296 L158 286 C216 272 252 268 276 266 L338 218 C372 198 418 188 474 186 L566 186 C614 188 654 198 682 218 L726 258 C756 266 772 278 776 296 C780 316 774 336 760 346 L722 352 A60 60 0 0 0 602 352 L318 352 A60 60 0 0 0 198 352 L108 352 Z"/>
+            </clipPath>
+          </defs>
           <g class="ev-bg" aria-hidden="true">
             <circle class="ring r1" cx="270" cy="225" r="205"/>
             <circle class="ring r2" cx="665" cy="255" r="150"/>
@@ -499,6 +581,13 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
               <path d="M758 300 L776 306 L772 318 L754 312 Z" fill="#C9538F"/>
             </g>
             
+            <g clip-path="url(#bodyClip)" aria-hidden="true">
+              <g class="scan">
+                <rect x="0" y="176" width="30" height="205" fill="rgba(99,186,219,.07)"/>
+                <rect x="26" y="176" width="2.5" height="205" fill="#63BADB" opacity=".85"/>
+              </g>
+            </g>
+            
             <g aria-hidden="true">
               <circle cx="258" cy="348" r="48" fill="#0B2038" stroke="#63BADB" stroke-width="3"/>
               <circle cx="258" cy="348" r="28" fill="rgba(7,23,41,.6)" stroke="#2E86AB" stroke-width="2"/>
@@ -510,6 +599,11 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
               <g class="rim" style="animation-delay:-.6s"><g id="sp2"><line x1="664" y1="326" x2="664" y2="340" stroke="#63BADB" stroke-width="3" stroke-linecap="round"/></g>
                 <use href="#sp2" transform="rotate(72 664 348)"/><use href="#sp2" transform="rotate(144 664 348)"/><use href="#sp2" transform="rotate(216 664 348)"/><use href="#sp2" transform="rotate(288 664 348)"/></g>
               <circle cx="664" cy="348" r="6" fill="#63BADB"/>
+            </g>
+            
+            <g aria-hidden="true">
+              <path class="flow-base" d="M317 258 C336 300 358 306 391 292 C416 281 428 324 462 334 C548 360 588 318 660 310"/>
+              <path class="flow-dash" d="M317 258 C336 300 358 306 391 292 C416 281 428 324 462 334 C548 360 588 318 660 310"/>
             </g>
             
             <a class="part" id="p-inverter" href="#contact" aria-label="اینورتر و کنترلر — عیب‌یابی سیستم برقی؛ کلیک: درخواست خدمت">
@@ -556,6 +650,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
             </a>
             
             <a class="part" id="p-port" href="#contact" aria-label="درگاه شارژ — نصب و سرویس شارژر؛ کلیک: درخواست خدمت">
+              <circle class="pulse" cx="317" cy="252" r="9" aria-hidden="true"/>
               <rect class="halo" x="296" y="236" width="42" height="32" rx="9"/>
               <rect x="302" y="242" width="30" height="20" rx="5" fill="rgba(99,186,219,.2)" stroke="#63BADB" stroke-width="2"/>
               <circle class="led" cx="340" cy="252" r="3.2" fill="#C9538F"/>
@@ -740,9 +835,8 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
       </div>
       <div class="lab-stage-col rv">
         <div class="lab-stage">
-          <svg viewBox="0 0 680 470" role="img" aria-label="نمای سه‌بعدی ایزومتریک پکیج باتری با لایه‌های بازشونده">
+          <svg viewBox="0 0 680 470" role="img" aria-label="نمای سه‌بعدی ایزومتریک پکیج باتری با لایه‌های بازشونده: سلول‌ها، خنک‌کاری، برد BMS و ترمینال‌ها">
             <defs>
-              
               <g id="c3d">
                 <path d="M-13 0 v24 a13 7.5 0 0 0 26 0 v-24" fill="#14395f"/>
                 <ellipse cx="0" cy="24" rx="13" ry="7.5" fill="#0c2b49"/>
@@ -774,10 +868,12 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
                   <polygon points="104,177 208,117 208,125 104,185" fill="#0c2a4c"/>
                   <polygon class="cool-top" points="0,-15 208,105 104,165 -104,45" fill="#123a63" stroke="#63BADB" stroke-width="1.6"/>
                   <use href="#chL"/><use href="#chL" transform="translate(-26,15)"/><use href="#chL" transform="translate(-52,30)"/><use href="#chL" transform="translate(-78,45)"/>
+                  <use class="cool-flow" href="#chL"/><use class="cool-flow" href="#chL" transform="translate(-26,15)"/>
+                  <use class="cool-flow" href="#chL" transform="translate(-52,30)"/><use class="cool-flow" href="#chL" transform="translate(-78,45)"/>
                 </g>
                 
                 <g id="lab-cells" class="cells3d">
-                  <use href="#c3d" x="0" y="0" style="animation-delay:0s"/>
+                  <use href="#c3d" x="0" y="0"/>
                   <use href="#c3d" x="26" y="15" style="animation-delay:-.1s"/><use href="#c3d" x="-26" y="15" style="animation-delay:-.2s"/>
                   <use href="#c3d" x="52" y="30" style="animation-delay:-.3s"/><use href="#c3d" x="0" y="30" style="animation-delay:-.4s"/><use href="#c3d" x="-52" y="30" style="animation-delay:-.5s"/>
                   <use href="#c3d" x="78" y="45" style="animation-delay:-.6s"/><use href="#c3d" x="26" y="45" style="animation-delay:-.7s"/><use href="#c3d" x="-26" y="45" style="animation-delay:-.8s"/><use href="#c3d" x="-78" y="45" style="animation-delay:-.9s"/>
@@ -792,6 +888,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
                 
                 <g id="lab-bms">
                   <polygon points="238,103 108,178 108,218 238,143" fill="#0B2038" stroke="rgba(99,186,219,.5)" stroke-width="1.5"/>
+                  <line class="bms-flow" x1="236" y1="110" x2="112" y2="182"/>
                   <polygon class="chip" points="222,112 202,123 202,133 222,122" fill="#63BADB"/>
                   <polygon class="chip" points="192,130 172,141 172,151 192,140" fill="#63BADB"/>
                   <polygon class="chip" points="160,148 144,157 144,165 160,156" fill="#63BADB"/>
@@ -825,17 +922,56 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
 </section>
 
 
+<section class="sec proc" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv"><svg aria-hidden="true"><use href="#i-file"/></svg>مسیر سرویس</p>
+      <h2 class="rv">چهار قدم شفاف تا تحویل خودرو</h2>
+      <p class="sub rv">در هر مرحله دقیقاً می‌دانید خودروی شما کجای کار است و چه هزینه‌ای در پیش است — بدون سورپرایز.</p>
+    </div>
+    <ol class="steps">
+      <li class="step rv">
+        <span class="step-num" aria-hidden="true">۰۱</span>
+        <span class="step-ic"><svg aria-hidden="true"><use href="#i-phone"/></svg></span>
+        <h3>تماس و مشاوره رایگان</h3>
+        <p>مشکل را تلفنی یا در فرم پایین صفحه توضیح می‌دهید؛ کارشناس ما راهنمایی اولیه و وقت بازدید می‌دهد.</p>
+      </li>
+      <li class="step rv">
+        <span class="step-num" aria-hidden="true">۰۲</span>
+        <span class="step-ic"><svg aria-hidden="true"><use href="#i-chip"/></svg></span>
+        <h3>دیاگ و گزارش کتبی</h3>
+        <p>دیاگ اولین بازدید رایگان است و نتیجه با لیست قطعات و مبلغ دقیق، کتبی به شما اعلام می‌شود.</p>
+        <span class="tagp-txt">دیاگ رایگان</span>
+      </li>
+      <li class="step rv">
+        <span class="step-num" aria-hidden="true">۰۳</span>
+        <span class="step-ic"><svg aria-hidden="true"><use href="#i-wrench"/></svg></span>
+        <h3>تأیید قیمت و اجرا</h3>
+        <p>فقط با تأیید شما شروع می‌کنیم؛ تعمیر با قطعات اورجینال و مطابق پروتکل ایمنی خودروهای برقی انجام می‌شود.</p>
+      </li>
+      <li class="step rv">
+        <span class="step-num" aria-hidden="true">۰۴</span>
+        <span class="step-ic"><svg aria-hidden="true"><use href="#i-shield"/></svg></span>
+        <h3>تحویل با گارانتی</h3>
+        <p>خودرو با گزارش سلامت نهایی و گارانتی کتبی ۶ ماهه تحویل داده می‌شود؛ پشتیبانی پس از تحویل هم برقرار است.</p>
+        <span class="tagp-txt">گارانتی ۶ ماهه</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+
 <section class="sec" id="about" style="border-top:1px solid var(--line-soft)">
   <div class="wrap about-grid">
     <div class="about-copy">
       <p class="eyebrow rv"><svg aria-hidden="true"><use href="#i-bolt"/></svg>درباره ما</p>
       <h2 class="rv">یک دهه مکانیک، حالا عصرِ برق</h2>
-      <p class="lead" style="margin-top:18px" >ما با بیش از ۱۰ سال تجربه در زمینه تعمیرات خودروهای بنزینی، اکنون با تیمی متخصص در زمینه فناوری‌های برقی، تخصص خود را به دنیای خودروهای الکتریکی گسترش داده‌ایم. هدف ما ارائه خدمات باکیفیت، شفاف و مطابق با استانداردهای جهانی است.</p>
+      <p class="lead" style="margin-top:18px">ما با بیش از ۱۰ سال تجربه در زمینه تعمیرات خودروهای بنزینی، اکنون با تیمی متخصص در زمینه فناوری‌های برقی، تخصص خود را به دنیای خودروهای الکتریکی گسترش داده‌ایم. هدف ما ارائه خدمات باکیفیت، شفاف و مطابق با استانداردهای جهانی است.</p>
       <p class="rv">از اولین دیاگ تا تحویل نهایی، همه‌چیز با گزارش کتبی و قیمت شفاف انجام می‌شود — پیش از شروع کار، دقیقاً می‌دانید چه چیزی تعمیر می‌شود و چه هزینه‌ای دارد.</p>
     </div>
     <div class="stats-grid rv">
       <div class="stat"><b>۱۰+</b><span>سال تجربه‌ی تخصصی</span></div>
-      <div class="stat"><b>۳٬۵۰۰+</b><span>خودروی تعمیرشده</span></div>
+      <div class="stat"><b>۳۵۰۰+</b><span>خودروی تعمیرشده</span></div>
       <div class="stat"><b>۹۸٪</b><span>رضایت مشتریان</span></div>
       <div class="stat"><b>۶ ماه</b><span>گارانتی همه‌ی خدمات</span></div>
     </div>
@@ -915,6 +1051,11 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
         <input class="vh" type="checkbox" id="fq3">
         <label class="faq-q" for="fq3">آیا برای خودروهای خارجی هم خدمات ارائه می‌دهید؟<span class="faq-ic"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></label>
         <div class="faq-a"><div><p>بله، ما خدمات تخصصی برای برندهایی مانند تسلا، ب‌ام‌و i و نیسان لیف ارائه می‌دهیم.</p></div></div>
+      </div>
+      <div class="faq-item rv">
+        <input class="vh" type="checkbox" id="fq4">
+        <label class="faq-q" for="fq4">قبل از تعمیر، هزینه را از کجا بفهمم؟<span class="faq-ic"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></label>
+        <div class="faq-a"><div><p>دیاگ اولین بازدید رایگان است و پیش از شروع هر کاری، لیست قطعات و مبلغ دقیق در قالب گزارش کتبی به شما اعلام می‌شود؛ تعمیر فقط با تأیید شما آغاز می‌شود.</p></div></div>
       </div>
     </div>
   </div>
@@ -1002,6 +1143,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 34px;margin-top:20px
       <nav class="foot-links" aria-label="دسترسی سریع">
         <a href="#services">خدمات اصلی</a>
         <a href="#lab">نمای سه‌بعدی باتری</a>
+        <a href="#process">مسیر سرویس</a>
         <a href="#faq">پرسش‌های متداول</a>
         <a href="#contact">تماس با ما</a>
       </nav>
