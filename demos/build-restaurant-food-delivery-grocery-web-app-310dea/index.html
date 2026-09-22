@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olive Lane — Order Food & Groceries via WhatsApp QR | Restaurant & Market</title>
+<meta name="description" content="WhatsApp-first ordering web app for restaurants and grocery stores. Guests scan a QR code, browse a live menu, and send their order in one tap — no app, no signup.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#186B47">
+
+
+
+
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+body{font-family:'Vazirmatn',Tahoma,sans-serif}
+/* =====================================================================
+   OLIVE LANE — WhatsApp QR ordering web app · single file · zero deps
+   Section map (1 block = future SCSS partial):
+   00 Tokens/Base · 01 Notebar+Header · 02 Drawer nav · 03 Hero(+phone+QR)
+   04 Marquee · 05 HowItWorks · 06 Menu app · 07 Cart drawer
+   08 QR builder · 09 Storefronts · 10 Stats · 11 Testimonials
+   12 Pricing · 13 FAQ · 14 CTA form · 15 Footer · 16 Toast · 17 Responsive
+   ===================================================================== */
+
+/* ---------- 00 · Tokens & Base ---------- */
+:root{
+  --cream:#FAF6EE; --paper:#FFFFFF;
+  --ink:#1F2A22; --ink-2:#3A4A3F; --muted:#6B7A6F;
+  --line:#E8E3D5; --line-2:#D9D3C2;
+  --green:#186B47; --green-d:#0F5136; --green-soft:#E7F2EA; --green-line:#C9E0D2;
+  --tom:#E4572E; --tom-d:#C94722; --tom-soft:#FCE9E1;
+  --gold:#E39A2D; --gold-soft:#FBF0DC;
+  --wa:#1DAB54; --wa-d:#178F46;
+  --dark:#123527;
+  --r-s:10px; --r-m:14px; --r-l:22px;
+  --sh-1:0 1px 2px rgba(31,42,34,.05),0 10px 26px -14px rgba(31,42,34,.16);
+  --sh-2:0 22px 50px -20px rgba(31,42,34,.30);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --font:'Avenir Next','Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--cream);color:var(--ink);font-size:16.5px;line-height:1.75;overflow-x:hidden}
+body:has(#navT:checked),body:has(.cart.open){overflow:hidden}
+::selection{background:var(--green);color:#fff}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:1rem;color:var(--ink)}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+section{scroll-margin-top:110px}
+.container{max-width:1200px;margin-inline:auto;padding-inline:clamp(18px,4vw,36px)}
+.sec{padding-block:clamp(62px,8vw,104px)}
+.sec--paper{background:var(--paper);border-block:1px solid var(--line)}
+h1,h2,h3{line-height:1.35}
+h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:900;letter-spacing:-.5px}
+h2{font-size:clamp(1.45rem,3vw,2.05rem);font-weight:800;letter-spacing:-.3px}
+h3{font-weight:800}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--green);font-weight:800;font-size:.86rem;letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px}
+.eyebrow svg{width:16px;height:16px}
+.sec-head{max-width:640px;margin-bottom:clamp(28px,4vw,46px)}
+.sec-head .sub{color:var(--muted);margin-top:10px;font-size:1rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:.97rem;padding:14px 26px;border-radius:13px;transition:transform .25s var(--ease),background .25s,border-color .25s,color .25s,box-shadow .25s}
+.btn svg{width:18px;height:18px}
+.btn--tom{background:var(--tom);color:#fff}
+.btn--tom:hover{background:var(--tom-d);transform:translateY(-2px);box-shadow:0 14px 28px -14px rgba(228,87,46,.65)}
+.btn--wa{background:var(--wa);color:#fff}
+.btn--wa:hover{background:var(--wa-d);transform:translateY(-2px);box-shadow:0 14px 28px -14px rgba(29,171,84,.6)}
+.btn--ghost{border:1.5px solid var(--line-2);background:var(--paper)}
+.btn--ghost:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+html.js .rv{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .8s var(--ease)}
+html.js .rv.in{opacity:1;transform:none}
+.vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+/* QR frames */
+.qr-frame{position:relative;background:#fff;border:1px solid var(--line-2);border-radius:16px;padding:14px}
+.qr-frame svg{width:100%;height:auto;color:var(--ink)}
+.qr-frame .scanline{position:absolute;inset-inline:14px;height:2px;background:var(--wa);opacity:.55;border-radius:2px;animation:scan 2.6s ease-in-out infinite;pointer-events:none}
+@keyframes scan{0%,100%{top:16px}50%{top:calc(100% - 16px)}}
+html.no-qr .qr-frame{display:none}
+
+/* ---------- 01 · Notebar + Header ---------- */
+.notebar{background:var(--dark);color:#BCD6C6;font-size:.78rem;text-align:center;padding:8px 14px}
+.notebar b{color:#fff}
+.hd{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--line);transition:box-shadow .3s}
+.hd.scrolled{box-shadow:var(--sh-1)}
+.hd__in{display:flex;align-items:center;gap:clamp(12px,2vw,26px);height:74px}
+.logo{display:flex;align-items:center;gap:11px;flex:none}
+.logo__mark{width:44px;height:44px;border-radius:13px;background:var(--green);color:#fff;display:grid;place-items:center}
+.logo__mark svg{width:24px;height:24px}
+.logo b{display:block;font-size:1.16rem;font-weight:900;letter-spacing:-.2px;line-height:1.2}
+.logo small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.6px;text-transform:uppercase}
+.hd__nav{display:flex;gap:2px}
+.hd__nav a{padding:9px 13px;border-radius:10px;font-weight:700;font-size:.93rem;color:var(--ink-2);transition:color .25s,background .25s}
+.hd__nav a:hover{color:var(--green);background:var(--green-soft)}
+.hd__acts{display:flex;align-items:center;gap:10px;margin-left:auto}
+.icon-btn{width:44px;height:44px;flex:none;border:1.5px solid var(--line);border-radius:12px;display:grid;place-items:center;position:relative;cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+.cart-badge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--tom);color:#fff;font-size:.7rem;font-weight:800;display:grid;place-items:center;transition:transform .3s var(--ease)}
+.cart-badge.hide{display:none}
+.cart-badge.pop{transform:scale(1.4)}
+.hd__burger{display:none}
+
+/* ---------- 02 · Mobile drawer nav (CSS-first, opens from right) ---------- */
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(18,53,39,.5);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;cursor:pointer}
+#navT:checked ~ .scrim{opacity:1;visibility:visible}
+.m-nav{position:fixed;top:0;bottom:0;right:0;z-index:95;width:min(330px,86vw);background:var(--paper);box-shadow:var(--sh-2);transform:translateX(103%);transition:transform .5s var(--ease);display:flex;flex-direction:column;padding:18px}
+#navT:checked ~ .m-nav{transform:none}
+.m-nav__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.m-nav nav{display:flex;flex-direction:column;gap:3px}
+.m-nav nav a{padding:13px 14px;border-radius:11px;font-weight:700;transition:background .25s,color .25s}
+.m-nav nav a:hover{background:var(--green-soft);color:var(--green)}
+.m-nav__foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;font-size:.9rem;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+.m-nav__foot a{font-weight:800;color:var(--ink)}
+
+/* ---------- 03 · Hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(24,107,71,.10) 1.2px,transparent 1.2px);background-size:26px 26px;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none}
+.blob--a{width:420px;height:420px;background:rgba(24,107,71,.10);top:-120px;right:-80px}
+.blob--b{width:360px;height:360px;background:rgba(227,154,45,.12);bottom:-140px;left:-100px}
+.hero__grid{position:relative;display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(30px,4vw,56px);align-items:center;padding-block:clamp(54px,7vw,92px)}
+.hero .lede{color:var(--muted);max-width:490px;margin-top:16px;font-size:1.05rem}
+.hero h1 em{font-style:normal;color:var(--green);border-bottom:4px solid var(--gold);padding-bottom:1px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hero__chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero__chips span{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.82rem;color:var(--ink-2)}
+.hero__chips svg{width:15px;height:15px;color:var(--green)}
+/* Phone mockup */
+.hero__stage{position:relative;display:flex;justify-content:center}
+.phone{width:min(300px,78vw);background:#fff;border:9px solid var(--ink);border-radius:44px;box-shadow:var(--sh-2);overflow:hidden;position:relative}
+.phone__notch{width:110px;height:22px;background:var(--ink);border-radius:0 0 14px 14px;margin:0 auto}
+.phone__body{padding:10px 14px 14px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(#FDFBF6,#F4EFE3)}
+.phone__apphead{display:flex;align-items:center;justify-content:space-between}
+.phone__brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:.92rem}
+.phone__brand i{width:26px;height:26px;border-radius:8px;background:var(--green);color:#fff;display:grid;place-items:center}
+.phone__brand i svg{width:15px;height:15px}
+.phone__table{background:var(--green-soft);color:var(--green);border-radius:99px;padding:3px 11px;font-size:.72rem;font-weight:800}
+.phone__search{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 12px;font-size:.8rem;color:var(--muted)}
+.phone__chips{display:flex;gap:6px}
+.phone__chips i{font-style:normal;font-size:.72rem;font-weight:800;padding:5px 11px;border-radius:99px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+.phone__chips i.on{background:var(--green);border-color:var(--green);color:#fff}
+.phone__row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:9px 11px}
+.phone__row i.p-ic{width:38px;height:38px;border-radius:10px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;flex:none}
+.phone__row i.p-ic svg{width:20px;height:20px}
+.phone__row b{display:block;font-size:.82rem;line-height:1.3}
+.phone__row small{color:var(--muted);font-size:.74rem;font-weight:700}
+.phone__row .p-add{margin-left:auto;width:28px;height:28px;border-radius:9px;background:var(--tom);color:#fff;display:grid;place-items:center;font-weight:900;font-size:.95rem;flex:none}
+.phone__row .p-add.has{background:var(--green)}
+.phone__wa{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--wa);color:#fff;font-weight:800;font-size:.85rem;padding:12px;border-radius:13px;position:relative}
+.phone__wa svg{width:17px;height:17px}
+.phone__wa::after{content:"";position:absolute;inset:0;border-radius:13px;border:2px solid var(--wa);animation:waPulse 1.8s ease-out infinite}
+@keyframes waPulse{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(1.12);opacity:0}}
+/* Floating QR card + chips */
+.qr-float{position:absolute;bottom:-8px;left:-26px;width:168px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px;box-shadow:var(--sh-1);transform:rotate(-3deg);animation:floaty 6s ease-in-out infinite}
+.qr-float .qr-frame{padding:8px;border:none}
+.qr-float p{font-size:.68rem;font-weight:800;text-align:center;margin-top:7px;color:var(--ink-2)}
+.qr-float small{display:block;text-align:center;font-size:.62rem;color:var(--muted)}
+@keyframes floaty{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(-3deg) translateY(-8px)}}
+.chip-f{position:absolute;display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.76rem;font-weight:800;box-shadow:var(--sh-1);animation:floaty2 5.5s ease-in-out infinite}
+.chip-f svg{width:15px;height:15px;color:var(--green)}
+.chip--a{top:26px;right:-18px}
+.chip--b{bottom:96px;right:-30px;animation-delay:1.6s}
+.chip--b svg{color:var(--gold)}
+@keyframes floaty2{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* ---------- 04 · Marquee ---------- */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);background:var(--paper);padding:15px 0}
+.mq-track{display:flex;width:max-content;animation:mq 30s linear infinite}
+.marquee:hover .mq-track{animation-play-state:paused}
+.mq-track>div{display:flex;align-items:center}
+.mq-track span{display:inline-flex;align-items:center;gap:40px;padding-inline-start:40px;font-weight:800;color:var(--muted);font-size:.92rem;letter-spacing:.3px;white-space:nowrap}
+.mq-track span svg{width:11px;height:11px;color:var(--tom)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- 05 · How it works ---------- */
+.steps{list-style:none;position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:st}
+.steps::before{content:"";position:absolute;top:44px;left:12%;right:12%;border-top:2px dashed var(--green-line)}
+.step{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:26px 24px;transition:transform .4s var(--ease),border-color .3s,box-shadow .3s}
+.step:hover{transform:translateY(-6px);border-color:var(--green-line);box-shadow:var(--sh-1)}
+.step__num{position:absolute;top:18px;right:20px;font-size:2.4rem;font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:1.3px var(--green-line);transition:-webkit-text-stroke-color .3s}
+.step:hover .step__num{-webkit-text-stroke-color:var(--gold)}
+.step i{width:56px;height:56px;border-radius:16px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin-bottom:14px;position:relative;z-index:1}
+.step i svg{width:27px;height:27px}
+.step h3{font-size:1.06rem;margin-bottom:5px}
+.step p{color:var(--muted);font-size:.9rem}
+
+/* ---------- 06 · Menu app ---------- */
+.menu-tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:22px}
+.menu-search{position:relative;flex:1;min-width:220px;max-width:360px}
+.menu-search svg{position:absolute;left:14px;top:50%;translate:0 -50%;width:17px;height:17px;color:var(--muted);pointer-events:none}
+.menu-search input{width:100%;border:1.5px solid var(--line-2);background:var(--paper);border-radius:12px;padding:12px 14px 12px 42px;font-size:.93rem}
+.menu-search input:focus{outline:none;border-color:var(--green)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 17px;border-radius:99px;border:1.5px solid var(--line-2);background:var(--paper);font-weight:700;font-size:.87rem;color:var(--ink-2);cursor:pointer;transition:all .25s}
+.chip:hover{border-color:var(--green);color:var(--green)}
+.chip.active{background:var(--green);border-color:var(--green);color:#fff}
+.menu-count{font-size:.83rem;color:var(--muted);margin-bottom:16px}
+.dish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:16px}
+.dish{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;transition:transform .4s var(--ease),box-shadow .35s,border-color .3s}
+.dish:hover{transform:translateY(-6px);box-shadow:var(--sh-2);border-color:var(--green-line)}
+.dish.is-hide{display:none}
+.dish__media{position:relative;background:linear-gradient(#FDFBF6,#F1EDE0);border-bottom:1px solid var(--line);display:grid;place-items:center;padding:26px 10px}
+.dish__media svg.dish__ic{width:66px;height:66px;color:var(--green);transition:transform .45s var(--ease)}
+.dish:hover .dish__ic{transform:translateY(-4px) scale(1.08)}
+.tag{position:absolute;top:11px;left:11px;display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 10px;font-size:.68rem;font-weight:800}
+.tag svg{width:12px;height:12px}
+.tag--veg{background:var(--green-soft);color:var(--green)}
+.tag--spicy{background:var(--tom-soft);color:var(--tom)}
+.tag--chef{background:var(--gold-soft);color:#B27414}
+.dish__body{display:flex;flex-direction:column;gap:5px;padding:15px;flex:1}
+.dish__body h3{font-size:.98rem}
+.dish__body>p{color:var(--muted);font-size:.82rem;line-height:1.55;flex:1}
+.dish__row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;padding-top:11px;border-top:1px dashed var(--line)}
+.dish__price{font-size:1.02rem;font-weight:900}
+.step-ctl{display:inline-flex;align-items:center;border:1.5px solid var(--line-2);border-radius:11px;overflow:hidden}
+.step-ctl button{width:34px;height:36px;display:grid;place-items:center;color:var(--green);transition:background .2s}
+.step-ctl button svg{width:14px;height:14px}
+.step-ctl button:hover{background:var(--green-soft)}
+.step-ctl button:disabled{opacity:.3;cursor:default;background:none}
+.step-ctl output{width:30px;text-align:center;font-weight:800;font-size:.9rem}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:.95rem}
+.empty.show{display:block}
+
+/* ---------- 07 · Cart drawer ---------- */
+.cart-scrim{position:fixed;inset:0;z-index:100;background:rgba(18,53,39,.5);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.cart-scrim.open{opacity:1;visibility:visible}
+.cart{position:fixed;top:0;bottom:0;right:0;z-index:105;width:min(420px,94vw);background:var(--paper);box-shadow:var(--sh-2);transform:translateX(103%);transition:transform .5s var(--ease);display:flex;flex-direction:column}
+.cart.open{transform:none}
+.cart__head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.cart__head b{font-size:1.06rem}
+.cart__items{flex:1;overflow-y:auto;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
+.cart__empty{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:20px}
+.cart__empty svg{width:52px;height:52px;color:var(--line-2)}
+.cart.is-empty .cart__items,.cart.is-empty .cart__sums,.cart.is-empty .cart__qr,.cart.is-empty .cart__cta{display:none}
+.cart.is-empty .cart__empty{display:flex}
+.c-line{display:flex;align-items:center;gap:12px;background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:10px 12px}
+.c-line i{width:42px;height:42px;border-radius:11px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;flex:none}
+.c-line i svg{width:21px;height:21px}
+.c-line b{display:block;font-size:.88rem;line-height:1.35}
+.c-line small{color:var(--muted);font-size:.78rem;font-weight:700}
+.c-line .step-ctl{margin-left:auto}
+.c-line .step-ctl button{width:28px;height:30px}
+.c-line .step-ctl output{width:24px}
+.c-line__x{color:var(--muted);padding:4px;flex:none}
+.c-line__x svg{width:14px;height:14px}
+.c-line__x:hover{color:var(--tom)}
+.cart__sums{border-top:1px solid var(--line);padding:14px 20px 6px;font-size:.92rem}
+.cart__sums .row{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted)}
+.cart__sums .row.total{color:var(--ink);font-weight:900;font-size:1.06rem;border-top:1px dashed var(--line-2);margin-top:7px;padding-top:9px}
+.freebar{height:6px;background:var(--line);border-radius:99px;margin:10px 0 4px;overflow:hidden}
+.freebar i{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .4s var(--ease)}
+.freebar+p{font-size:.76rem;color:var(--muted);text-align:center}
+.cart__qr{padding:10px 20px;display:flex;align-items:center;gap:14px}
+.cart__qr .qr-frame{width:110px;flex:none;padding:7px}
+.cart__qr p{font-size:.78rem;color:var(--muted);line-height:1.6}
+.cart__cta{padding:12px 20px 18px}
+.cart__cta .btn{width:100%}
+.cart__note{text-align:center;font-size:.72rem;color:var(--muted);margin-top:9px}
+
+/* ---------- 08 · QR builder ---------- */
+.qr-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(28px,4vw,56px);align-items:center}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:13px;margin-top:22px}
+.feat-list li{display:flex;align-items:flex-start;gap:12px;font-size:.95rem}
+.feat-list i{width:38px;height:38px;flex:none;border-radius:11px;background:var(--green-soft);color:var(--green);display:grid;place-items:center}
+.feat-list i svg{width:19px;height:19px}
+.feat-list b{display:block}
+.feat-list small{color:var(--muted);font-size:.83rem;line-height:1.55}
+.builder{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(20px,3vw,30px);box-shadow:var(--sh-1)}
+.builder h3{font-size:1.08rem;margin-bottom:4px}
+.builder>p{color:var(--muted);font-size:.86rem;margin-bottom:16px}
+.b-field{margin-bottom:12px}
+.b-field label{display:block;font-size:.8rem;font-weight:800;margin-bottom:6px;color:var(--ink-2)}
+.b-row{display:flex;gap:10px}
+.b-row .b-field{flex:none;width:110px}
+.b-row .b-field.grow{flex:1;width:auto}
+.b-field input,.b-field select{width:100%;border:1.5px solid var(--line-2);border-radius:11px;padding:11px 13px;background:var(--cream)}
+.b-field input:focus,.b-field select:focus{outline:none;border-color:var(--green);background:#fff}
+.builder__qr{display:flex;align-items:center;gap:16px;margin-top:16px;background:var(--cream);border:1px dashed var(--line-2);border-radius:14px;padding:14px}
+.builder__qr .qr-frame{width:150px;flex:none}
+.builder__qr .qr-meta{min-width:0}
+.builder__qr .qr-meta b{font-size:.9rem}
+.builder__qr .qr-meta p{font-size:.74rem;color:var(--muted);word-break:break-all;line-height:1.5;margin-top:4px}
+.builder__acts{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.builder__acts .btn{padding:11px 18px;font-size:.88rem}
+
+/* ---------- 09 · Storefronts ---------- */
+.venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.venue{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(22px,3vw,32px);transition:transform .4s var(--ease),box-shadow .3s}
+.venue:hover{transform:translateY(-5px);box-shadow:var(--sh-1)}
+.venue i{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;margin-bottom:14px}
+.venue i svg{width:26px;height:26px}
+.venue--r i{background:var(--tom-soft);color:var(--tom)}
+.venue--g i{background:var(--green-soft);color:var(--green)}
+.venue h3{font-size:1.15rem}
+.venue>p{color:var(--muted);font-size:.92rem;margin:4px 0 14px}
+.venue ul{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:.9rem}
+.venue ul li{display:flex;align-items:flex-start;gap:9px}
+.venue ul svg{width:15px;height:15px;color:var(--green);flex:none;margin-top:5px}
+
+/* ---------- 10 · Stats ---------- */
+.stats{background:var(--dark);color:#fff;border-radius:var(--r-l);display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
+.stat{padding:clamp(26px,3.4vw,44px) 18px;text-align:center;border-left:1px solid rgba(255,255,255,.09)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;line-height:1.3;color:#fff}
+.stat b em{font-style:normal;color:var(--gold)}
+.stat span{color:#A8C4B2;font-size:.87rem}
+
+/* ---------- 11 · Testimonials ---------- */
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.t-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:24px;display:flex;flex-direction:column;gap:12px;transition:transform .4s var(--ease),box-shadow .3s}
+.t-card:hover{transform:translateY(-5px);box-shadow:var(--sh-1)}
+.t-card .stars{display:inline-flex;gap:2px}
+.t-card .stars svg{width:15px;height:15px;color:var(--gold)}
+.t-card blockquote{font-size:.97rem;line-height:1.8}
+.t-who{margin-top:auto;display:flex;align-items:center;gap:11px}
+.t-who i{width:40px;height:40px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:900;font-style:normal;font-size:.9rem}
+.t-who b{display:block;font-size:.88rem}
+.t-who small{color:var(--muted);font-size:.76rem}
+
+/* ---------- 12 · Pricing ---------- */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.plan{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:28px 26px;display:flex;flex-direction:column;transition:transform .4s var(--ease),box-shadow .3s}
+.plan:hover{transform:translateY(-6px);box-shadow:var(--sh-1)}
+.plan--hot{border:2px solid var(--green);box-shadow:var(--sh-1)}
+.plan__flag{position:absolute;top:-13px;left:24px;background:var(--green);color:#fff;border-radius:99px;padding:4px 14px;font-size:.72rem;font-weight:800;letter-spacing:.4px}
+.plan h3{font-size:1.08rem}
+.plan .p-for{color:var(--muted);font-size:.83rem;margin-bottom:14px}
+.plan .p-amount{display:flex;align-items:baseline;gap:5px;margin-bottom:16px}
+.plan .p-amount b{font-size:2.1rem;font-weight:900;letter-spacing:-.5px}
+.plan .p-amount small{color:var(--muted)}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:.89rem;margin-bottom:22px}
+.plan ul li{display:flex;align-items:flex-start;gap:9px}
+.plan ul svg{width:15px;height:15px;color:var(--green);flex:none;margin-top:5px}
+.plan .btn{margin-top:auto}
+
+/* ---------- 13 · FAQ ---------- */
+.faq-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,4vw,56px);align-items:start}
+.faq-list{display:flex;flex-direction:column;gap:11px}
+details{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);transition:border-color .3s}
+details:hover{border-color:var(--green-line)}
+details[open]{border-color:var(--green-line);background:#fff}
+summary{display:flex;align-items:center;gap:12px;padding:17px 20px;font-weight:800;font-size:.98rem;cursor:pointer;list-style:none;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary i{margin-left:auto;width:26px;height:26px;flex:none;border:1.5px solid var(--line-2);border-radius:8px;display:grid;place-items:center;transition:transform .35s var(--ease),border-color .3s,background .3s}
+summary i svg{width:13px;height:13px;color:var(--green)}
+details[open] summary i{transform:rotate(45deg);border-color:var(--green);background:var(--green-soft)}
+details p{padding:0 20px 18px;color:var(--muted);font-size:.92rem}
+
+/* ---------- 14 · CTA form ---------- */
+.cta{position:relative;overflow:hidden;background:var(--dark);color:#fff;border-radius:var(--r-l);padding:clamp(28px,4.2vw,50px);display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(24px,3.5vw,44px);align-items:center}
+.cta::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1.2px,transparent 1.2px);background-size:26px 26px;pointer-events:none}
+.cta h2{color:#fff}
+.cta .sub{color:#A8C4B2;margin-top:10px;font-size:.98rem}
+.cta .bullets{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:20px;font-size:.92rem;position:relative}
+.cta .bullets li{display:flex;align-items:center;gap:10px}
+.cta .bullets svg{width:16px;height:16px;color:var(--gold);flex:none}
+.cta form{position:relative;background:var(--paper);border-radius:var(--r-m);padding:clamp(20px,2.6vw,28px);display:flex;flex-direction:column;gap:12px;box-shadow:var(--sh-2)}
+.cta label{font-size:.8rem;font-weight:800;color:var(--ink-2)}
+.cta input,.cta select,.cta textarea{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--cream)}
+.cta input:focus,.cta select:focus,.cta textarea:focus{outline:none;border-color:var(--green);background:#fff}
+.cta textarea{resize:vertical;min-height:70px}
+.cta .f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cta .btn{width:100%}
+.cta .mini{font-size:.72rem;color:var(--muted);text-align:center}
+
+/* ---------- 15 · Footer ---------- */
+.ft{background:var(--dark);color:#A8C4B2;margin-top:clamp(56px,7vw,88px)}
+.ft__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:clamp(22px,3vw,42px);padding-block:clamp(38px,5vw,58px)}
+.ft .logo b{color:#fff}
+.ft .logo small{color:#7FA68D}
+.ft__about p{font-size:.88rem;margin-top:13px;max-width:290px}
+.ft h3{color:#fff;font-size:.95rem;margin-bottom:14px}
+.ft ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:.89rem}
+.ft ul a:hover{color:#fff}
+.ft ul li{display:flex;align-items:center;gap:9px}
+.ft ul svg{width:15px;height:15px;color:#7FC9A0;flex:none}
+.ft__base{border-top:1px solid rgba(255,255,255,.09);padding-block:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:.79rem}
+
+/* ---------- 16 · Toast ---------- */
+.toast-root{position:fixed;bottom:22px;left:22px;z-index:130;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:11px;background:var(--ink);color:#fff;border-radius:13px;padding:13px 18px;max-width:min(380px,88vw);font-size:.9rem;box-shadow:var(--sh-2);opacity:0;transform:translateY(14px);transition:opacity .4s,transform .5s var(--ease)}
+.toast.show{opacity:1;transform:none}
+.toast svg{width:18px;height:18px;color:#7FC9A0;flex:none}
+.toast.err svg{color:#FF9B84}
+
+/* ---------- 17 · Responsive ---------- */
+@media (max-width:1060px){
+  .hd__nav{display:none}
+  .hd__burger{display:grid}
+  .hero__grid{grid-template-columns:1fr}
+  .hero__stage{padding-bottom:10px}
+  .qr-float{position:static;transform:none;margin:18px auto 0;animation:none}
+  .qr-float p{font-size:.78rem}
+  .qr-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+  .venue-grid{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  .t-grid{grid-template-columns:1fr}
+  .faq-wrap{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-top:1px solid rgba(255,255,255,.09)}
+  .stat:nth-child(-n+2){border-top:none}
+  .stat:nth-child(3){border-left:none}
+  .cta{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .hd__cta{display:none}
+  .hero__cta .btn{flex:1}
+  .chip-f{display:none}
+  .ft__grid{grid-template-columns:1fr}
+  .cta .f2{grid-template-columns:1fr}
+  .b-row{flex-wrap:wrap}
+  .cart__qr{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  
+  <symbol id="i-logo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20c8.2.2 13.2-5 13-14-8.2-.2-13.2 5-13 14Z"/><path d="M6 20c1.4-4.6 4.6-8.6 9-11"/><circle cx="17.6" cy="16.4" r="1.7"/></g></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></g></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2.2l2.3 10.5A2 2 0 0 0 9.5 17h8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="10" cy="20.5" r="1.4"/><circle cx="18" cy="20.5" r="1.4"/></g></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2.7a9.2 9.2 0 0 0-7.9 13.9L2.7 21.3l4.9-1.3A9.2 9.2 0 1 0 12 2.7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.9 7.9c.2-.4.5-.5.8-.5h.6c.2 0 .5.1.6.5.2.5.7 1.8.8 2 .1.2.1.4 0 .6l-.5.7c-.2.2-.3.4-.1.7.2.3.8 1.2 1.7 2 1.1 1 1.9 1.3 2.2 1.4.3.1.5.1.7-.1l.8-.9c.2-.2.4-.3.7-.1l1.8.9c.3.1.5.2.5.4a2.1 2.1 0 0 1-1.4 1.8 3.3 3.3 0 0 1-2.1-.2 10.8 10.8 0 0 1-4.9-4.3 4.6 4.6 0 0 1-1-2.3 2.4 2.4 0 0 1 .8-1.8Z" fill="currentColor"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M4 12h16"/></g></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.5 3h3L10 7.2 8 8.8a12.5 12.5 0 0 0 6.2 6.2l1.6-2 4.2 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M20 12H4M10.5 5.5 4 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.8 6.2.9-4.5 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L3 9.5l6.2-.9L12 2.8Z" fill="currentColor"/></symbol>
+  <symbol id="i-qrcode" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><path d="M13.5 13.5h3v3h-3zM17.5 17.5h2.5v2.5h-2.5z"/></g></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8V3.5h10V8M7 17H4.5A1.5 1.5 0 0 1 3 15.5v-6A1.5 1.5 0 0 1 4.5 8h15A1.5 1.5 0 0 1 21 9.5v6a1.5 1.5 0 0 1-1.5 1.5H17"/><rect x="7" y="14" width="10" height="6.5" rx="1"/></g></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h11v9H2zM13 10h4.2L20.5 13v3H13"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 7 2.8v5.4c0 4.5-3 8-7 9.8-4-1.8-7-5.3-7-9.8V5.8L12 3Z"/><path d="m9 11.8 2.2 2.2 4.2-4.4"/></g></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.9 13.5H10L8.7 22l10.4-12.2h-5.5L13 2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.6 5.1 3.6 8.5s-1.2 6.2-3.6 8.5c-2.4-2.3-3.6-5.1-3.6-8.5s1.2-6.2 3.6-8.5Z"/></g></symbol>
+  
+  <symbol id="t-leaf" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19C5 11 9.5 5.6 19 5c-.6 9.5-6 14-14 14Z"/><path d="M5 19c2-5 5.5-9 10-11.5"/></g></symbol>
+  <symbol id="t-pepper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5c.6-1.2 1.8-1.9 3.1-1.7"/><path d="M17 6.6c2 1.2 2.8 3.7 1.7 6.1-1.4 3.1-5 5-8.6 4.6-2.6-.3-4.9-1.7-5.9-3.7 3.3.7 6.9-.4 9.2-2.8 1.6-1.6 2.9-3 3.6-4.2Z"/></g></symbol>
+  <symbol id="t-chef" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11.2A3.5 3.5 0 0 1 8.6 4.6a4.4 4.4 0 0 1 6.8 0A3.5 3.5 0 0 1 17 11.2V16H7v-4.8Z"/><path d="M7 18.7h10M9 16v2.7M12 16v2.7M15 16v2.7"/></g></symbol>
+  
+  <symbol id="f-pizza" viewBox="0 0 24 24"><path d="M12 21.5 3.6 7.6A14.6 14.6 0 0 1 12 5a14.6 14.6 0 0 1 8.4 2.6L12 21.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="10.4" cy="10.3" r="1.1" fill="currentColor"/><circle cx="13.9" cy="13" r="1.1" fill="currentColor"/><circle cx="11.6" cy="15.7" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="f-burger" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5a8 7.5 0 0 1 16 0Z"/><path d="M4 13h16"/><path d="M4.5 16.5h15a2.3 2.3 0 0 1-2.3 2.5H6.8a2.3 2.3 0 0 1-2.3-2.5Z"/><path d="M7.2 6.7h.01M10.2 5.6h.01M13.2 5.6h.01"/></g></symbol>
+  <symbol id="f-salad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12h17a8.5 8.5 0 0 1-17 0Z"/><path d="M8.2 12c0-2.4 1.5-4.4 3.8-5.2M14 9.4c1.6.4 2.9 1.4 3.5 2.6"/><path d="M9.6 5.2c.9-1.2 2.4-1.2 3.2 0"/></g></symbol>
+  <symbol id="f-pasta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3.5 12.5h17a8.5 8.5 0 0 1-17 0Z"/><path d="M7 12.5V7.8M10.3 12.5V6.8M13.7 12.5V6.8M17 12.5V7.8"/><path d="M7 9.4c1.1 1.5 3.1 1.5 4.2 0s3.1-1.5 4.2 0 2.6 1.3 3.6.2"/></g></symbol>
+  <symbol id="f-coffee" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h11v5.5a4.5 4.5 0 0 1-4.5 4.5h-2A4.5 4.5 0 0 1 5 14.5V9Z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 3.8c.8.9.8 1.7 0 2.6M12 3.8c.8.9.8 1.7 0 2.6"/></g></symbol>
+  <symbol id="f-cake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5h14V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19v-6.5Z"/><path d="M5 15c2.3 1.4 4.7-1.2 7 .2s4.7 1.2 7-.2"/><path d="M12 9.3v3.2M12 9.3a1.4 1.4 0 0 1-1.3-2L12 5l1.3 2.3a1.4 1.4 0 0 1-1.3 2Z"/></g></symbol>
+  <symbol id="f-fish" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12c2.4-3.3 5.6-5 9-5 3.2 0 6.1 1.8 8 5-1.9 3.2-4.8 5-8 5-3.4 0-6.6-1.7-9-5Z"/><path d="m4.5 12-2.5-2.6v5.2L4.5 12Z"/><circle cx="16.6" cy="10.7" r="1" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="f-soup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5h16a8 8 0 0 1-16 0Z"/><path d="M6.5 8.6c1.2 1 2.6 1 3.8 0s2.6-1 3.8 0 2.5 1 3.6.2"/><path d="M6.5 12.5h11v.4a3.6 3.6 0 0 1-3.6 3.6H10a3.6 3.6 0 0 1-3.5-3.6v-.4Z"/></g></symbol>
+  <symbol id="f-basket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h16l-1.7 8a3 3 0 0 1-3 2.5H8.7a3 3 0 0 1-3-2.5L4 9.5Z"/><path d="M8.5 9.5 12 4l3.5 5.5"/><path d="M9.7 13v3.5M14.3 13v3.5"/></g></symbol>
+  <symbol id="f-oil" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8h4M10.8 2.8v3L8.5 8.6A3 3 0 0 0 7.5 11v8.2A1.8 1.8 0 0 0 9.3 21h5.4a1.8 1.8 0 0 0 1.8-1.8V11a3 3 0 0 0-1-2.4L13.2 5.8v-3"/><path d="M8 15.5h8"/></g></symbol>
+  <symbol id="f-eggs" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9.3 4.5c2 0 3.5 2.6 3.5 5.4S11.3 14 9.3 14 5.8 12.6 5.8 9.9 7.3 4.5 9.3 4.5Z"/><path d="M14.7 9.2c1.9.4 3.4 2.9 3.4 5.5 0 2.7-1.5 4.8-3.4 4.8-1.4 0-2.6-1.1-3.1-2.7"/></g></symbol>
+  <symbol id="f-bread" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11c0-2.8 3.1-5 7-5s7 2.2 7 5c0 1.1-.9 2-2 2v6a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 7 19v-6c-1.1 0-2-.9-2-2Z"/><path d="M9.5 9.5h.01M12.5 9.5h.01"/></g></symbol>
+</svg>
+
+<div class="toast-root" id="toastRoot" aria-live="polite"></div>
+
+
+<p class="notebar">Interactive demo — <b>WhatsApp buttons open a real chat</b> with a demo number (+1 555-123-4567). QR codes are live and scannable.</p>
+
+<header class="hd" id="hd">
+  <div class="container hd__in">
+    <label for="navT" class="icon-btn hd__burger" tabindex="0" role="button" aria-label="Open menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></label>
+    <a class="logo" href="#top" aria-label="Olive Lane — home">
+      <span class="logo__mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
+      <span><b>Olive Lane</b><small>Kitchen &amp; Market</small></span>
+    </a>
+    <nav class="hd__nav" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#menu">Menu</a>
+      <a href="#qr">QR system</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="hd__acts">
+      <a class="icon-btn" id="cartBtn" href="#menu" aria-label="Open your order">
+        <svg aria-hidden="true"><use href="#i-cart"/></svg>
+        <span class="cart-badge hide" id="cartBadge">0</span>
+      </a>
+      <a class="btn btn--tom hd__cta" href="#menu">Order now<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</header>
+
+
+<input type="checkbox" id="navT" class="vh" aria-label="Toggle menu">
+<label for="navT" class="scrim" aria-hidden="true" tabindex="-1"></label>
+<aside class="m-nav" role="dialog" aria-label="Mobile menu">
+  <div class="m-nav__head">
+    <b>Olive Lane</b>
+    <label for="navT" class="icon-btn" role="button" tabindex="0" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-close"/></svg></label>
+  </div>
+  <nav>
+    <a href="#how">How it works</a>
+    <a href="#menu">Live menu</a>
+    <a href="#qr">QR ordering system</a>
+    <a href="#venues">Restaurants &amp; grocery</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#start">Get your QR</a>
+  </nav>
+  <div class="m-nav__foot">
+    <a href="tel:+15551234567">+1 555-123-4567</a>
+    <span>Mon–Sat · 9:00–21:00</span>
+  </div>
+</aside>
+
+<main id="top">
+
+<section class="hero">
+  <div class="blob blob--a" aria-hidden="true"></div>
+  <div class="blob blob--b" aria-hidden="true"></div>
+  <div class="container hero__grid">
+    <div>
+      <p class="eyebrow rv"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp-first ordering</p>
+      <h1 class="rv">Scan the code.<br>Fill the cart. <em>We deliver.</em></h1>
+      <p class="lede rv">Olive Lane is a WhatsApp ordering web app for restaurants and grocery stores. Guests scan a QR at the table or on a flyer, browse a live menu, and send their order in one tap — no app store, no signup, no forgotten orders.</p>
+      <div class="hero__cta rv">
+        <a class="btn btn--tom" href="#menu">Browse the live menu<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="#qr">See the QR system</a>
+      </div>
+      <div class="hero__chips rv">
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>No app download</span>
+        <span><svg aria-hidden="true"><use href="#i-truck"/></svg>Free delivery over $35</span>
+        <span><svg aria-hidden="true"><use href="#i-star"/></svg>4.9 · 2,300+ reviews</span>
+      </div>
+    </div>
+
+    <div class="hero__stage rv">
+      
+      <div class="phone" role="img" aria-label="Preview of the Olive Lane ordering app on a phone">
+        <div class="phone__notch" aria-hidden="true"></div>
+        <div class="phone__body">
+          <div class="phone__apphead">
+            <span class="phone__brand"><i><svg aria-hidden="true"><use href="#i-logo"/></svg></i>Olive Lane</span>
+            <span class="phone__table">Table 12</span>
+          </div>
+          <div class="phone__search">Search wood-fired pizza…</div>
+          <div class="phone__chips" aria-hidden="true"><i class="on">Pizza</i><i>Mains</i><i>Market</i></div>
+          <div class="phone__row"><i class="p-ic"><svg aria-hidden="true"><use href="#f-pizza"/></svg></i><span><b>Diavola</b><small>$16.50 · spicy</small></span><span class="p-add">+</span></div>
+          <div class="phone__row"><i class="p-ic"><svg aria-hidden="true"><use href="#f-salad"/></svg></i><span><b>Quinoa Bowl</b><small>$12.50 · veg</small></span><span class="p-add has">1</span></div>
+          <a class="phone__wa" href="#menu"><svg aria-hidden="true"><use href="#i-wa"/></svg>Send order · $29.00</a>
+        </div>
+      </div>
+      
+      <div class="qr-float">
+        <div class="qr-frame"><svg id="heroQr" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Live QR code linking to WhatsApp order chat"></svg><span class="scanline" aria-hidden="true"></span></div>
+        <p>LIVE DEMO — SCAN ME</p>
+        <small>Opens a WhatsApp order chat</small>
+      </div>
+      <span class="chip-f chip--a"><svg aria-hidden="true"><use href="#i-check"/></svg>Order #1247 confirmed</span>
+      <span class="chip-f chip--b"><svg aria-hidden="true"><use href="#i-truck"/></svg>Rider nearby · 6 min</span>
+    </div>
+  </div>
+</section>
+
+
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <div>
+      <span>Wood-fired Pizza<svg><use href="#i-star"/></svg></span><span>Sushi &amp; Poke<svg><use href="#i-star"/></svg></span>
+      <span>Fresh Produce<svg><use href="#i-star"/></svg></span><span>Artisan Bakery<svg><use href="#i-star"/></svg></span>
+      <span>Organic Boxes<svg><use href="#i-star"/></svg></span><span>Specialty Coffee<svg><use href="#i-star"/></svg></span>
+      <span>Meal Kits<svg><use href="#i-star"/></svg></span><span>Late-night Cravings<svg><use href="#i-star"/></svg></span>
+    </div>
+    <div>
+      <span>Wood-fired Pizza<svg><use href="#i-star"/></svg></span><span>Sushi &amp; Poke<svg><use href="#i-star"/></svg></span>
+      <span>Fresh Produce<svg><use href="#i-star"/></svg></span><span>Artisan Bakery<svg><use href="#i-star"/></svg></span>
+      <span>Organic Boxes<svg><use href="#i-star"/></svg></span><span>Specialty Coffee<svg><use href="#i-star"/></svg></span>
+      <span>Meal Kits<svg><use href="#i-star"/></svg></span><span>Late-night Cravings<svg><use href="#i-star"/></svg></span>
+    </div>
+  </div>
+</div>
+
+
+<section class="sec" id="how">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-scan"/></svg>How it works</p>
+      <h2>From QR scan to door in three taps</h2>
+      <p class="sub">The whole flow lives in the browser and WhatsApp — the two apps every phone already has.</p>
+    </div>
+    <ol class="steps">
+      <li class="step rv"><span class="step__num" aria-hidden="true">01</span><i><svg aria-hidden="true"><use href="#i-scan"/></svg></i><h3>Scan the QR</h3><p>Guests point their camera at the table code — the web app opens instantly with that table's label, in any browser.</p></li>
+      <li class="step rv"><span class="step__num" aria-hidden="true">02</span><i><svg aria-hidden="true"><use href="#i-cart"/></svg></i><h3>Build the order</h3><p>Browse dishes or the grocery catalog, tap to add, see the total live. Daily specials update in minutes.</p></li>
+      <li class="step rv"><span class="step__num" aria-hidden="true">03</span><i><svg aria-hidden="true"><use href="#i-wa"/></svg></i><h3>Send on WhatsApp</h3><p>One tap sends the full order to the kitchen as a structured message. Confirm, pay and track — all in chat.</p></li>
+    </ol>
+  </div>
+</section>
+
+
+<section class="sec sec--paper" id="menu">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-cart"/></svg>Live menu — try it</p>
+      <h2>This is the app your guests will use</h2>
+      <p class="sub">Fully working demo: search, filter, build a cart, then send the order to WhatsApp — or scan the cart's QR with another phone.</p>
+    </div>
+    <div class="menu-tools rv">
+      <div class="menu-search">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="q" type="search" placeholder="Search dishes or groceries…" aria-label="Search menu">
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter categories">
+        <button class="chip active" data-cat="all">All</button>
+        <button class="chip" data-cat="s">Starters</button>
+        <button class="chip" data-cat="m">Mains</button>
+        <button class="chip" data-cat="p">Pizza</button>
+        <button class="chip" data-cat="d">Desserts &amp; Drinks</button>
+        <button class="chip" data-cat="g">Market</button>
+      </div>
+    </div>
+    <p class="menu-count" id="menuCount"></p>
+
+    <div class="dish-grid" id="grid">
+      <article class="dish rv" data-id="i1" data-cat="s" data-icon="f-soup" data-price="5.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-soup"/></svg></div><div class="dish__body"><h3>Soup of the Day</h3><p>Slow-simmered, changes every morning. Served with focaccia.</p><div class="dish__row"><span class="dish__price">$5.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i2" data-cat="s" data-icon="f-salad" data-price="9.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-salad"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Veg</span><span class="tag tag--chef" style="left:64px"><svg aria-hidden="true"><use href="#t-chef"/></svg>Chef's pick</span></div><div class="dish__body"><h3>Burrata &amp; Heirloom</h3><p>Creamy burrata, heirloom tomatoes, basil oil, sourdough crisps.</p><div class="dish__row"><span class="dish__price">$9.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i3" data-cat="s" data-icon="f-bread" data-price="4.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-bread"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Veg</span></div><div class="dish__body"><h3>Garlic Focaccia Strips</h3><p>Rosemary, sea salt, whipped herb butter for dipping.</p><div class="dish__row"><span class="dish__price">$4.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+
+      <article class="dish rv" data-id="i4" data-cat="m" data-icon="f-fish" data-price="18.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-fish"/></svg><span class="tag tag--chef"><svg aria-hidden="true"><use href="#t-chef"/></svg>Chef's pick</span></div><div class="dish__body"><h3>Herb-Crusted Salmon</h3><p>Atlantic salmon, lemon butter, seasonal greens.</p><div class="dish__row"><span class="dish__price">$18.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i5" data-cat="m" data-icon="f-salad" data-price="12.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-salad"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Veg</span></div><div class="dish__body"><h3>Quinoa Power Bowl</h3><p>Roasted veg, avocado, feta, toasted seeds, citrus dressing.</p><div class="dish__row"><span class="dish__price">$12.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i6" data-cat="m" data-icon="f-pasta" data-price="17.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-pasta"/></svg></div><div class="dish__body"><h3>Lamb Ragù Pappardelle</h3><p>Eight-hour lamb ragù, wide ribbons, aged pecorino.</p><div class="dish__row"><span class="dish__price">$17.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i7" data-cat="m" data-icon="f-burger" data-price="13.90"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-burger"/></svg></div><div class="dish__body"><h3>Smash Burger &amp; Fries</h3><p>Double patty, cheddar, pickles, house sauce, skin-on fries.</p><div class="dish__row"><span class="dish__price">$13.90</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+
+      <article class="dish rv" data-id="i8" data-cat="p" data-icon="f-pizza" data-price="14.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-pizza"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Veg</span></div><div class="dish__body"><h3>Margherita</h3><p>San Marzano, fior di latte, fresh basil. Wood-fired.</p><div class="dish__row"><span class="dish__price">$14.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i9" data-cat="p" data-icon="f-pizza" data-price="16.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-pizza"/></svg><span class="tag tag--spicy"><svg aria-hidden="true"><use href="#t-pepper"/></svg>Spicy</span></div><div class="dish__body"><h3>Diavola</h3><p>Spicy salami, chili honey drizzle, smoked scamorza.</p><div class="dish__row"><span class="dish__price">$16.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i10" data-cat="p" data-icon="f-pizza" data-price="17.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-pizza"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Veg</span></div><div class="dish__body"><h3>Funghi e Tartufo</h3><p>Wild mushrooms, truffle cream, thyme, mozzarella.</p><div class="dish__row"><span class="dish__price">$17.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+
+      <article class="dish rv" data-id="i11" data-cat="d" data-icon="f-coffee" data-price="3.80"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-coffee"/></svg></div><div class="dish__body"><h3>Flat White</h3><p>Double shot, single-origin beans, silky micro-foam.</p><div class="dish__row"><span class="dish__price">$3.80</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i12" data-cat="d" data-icon="f-cake" data-price="7.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-cake"/></svg></div><div class="dish__body"><h3>Basque Cheesecake</h3><p>Burnt top, custard centre. Baked fresh daily.</p><div class="dish__row"><span class="dish__price">$7.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i13" data-cat="d" data-icon="f-cake" data-price="7.50"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-cake"/></svg><span class="tag tag--chef"><svg aria-hidden="true"><use href="#t-chef"/></svg>Chef's pick</span></div><div class="dish__body"><h3>Classic Tiramisù</h3><p>Espresso-soaked savoiardi, mascarpone, dark cocoa.</p><div class="dish__row"><span class="dish__price">$7.50</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+
+      <article class="dish rv" data-id="i14" data-cat="g" data-icon="f-bread" data-price="5.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-bread"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Organic</span></div><div class="dish__body"><h3>Sourdough Loaf</h3><p>48-hour ferment, baked every morning in-house.</p><div class="dish__row"><span class="dish__price">$5.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i15" data-cat="g" data-icon="f-eggs" data-price="4.80"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-eggs"/></svg></div><div class="dish__body"><h3>Organic Eggs · Dozen</h3><p>Free-range, delivered cold-chain from the farm.</p><div class="dish__row"><span class="dish__price">$4.80</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i16" data-cat="g" data-icon="f-oil" data-price="12.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-oil"/></svg></div><div class="dish__body"><h3>Cold-Pressed Olive Oil 500 ml</h3><p>First harvest, single estate, peppery finish.</p><div class="dish__row"><span class="dish__price">$12.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+      <article class="dish rv" data-id="i17" data-cat="g" data-icon="f-basket" data-price="15.00"><div class="dish__media"><svg class="dish__ic" aria-hidden="true"><use href="#f-basket"/></svg><span class="tag tag--veg"><svg aria-hidden="true"><use href="#t-leaf"/></svg>Organic</span></div><div class="dish__body"><h3>Seasonal Veg Box</h3><p>Whatever's best this week from partner farms. Feeds 2–3.</p><div class="dish__row"><span class="dish__price">$15.00</span><span class="step-ctl"><button data-d="-1" aria-label="Remove one" disabled><svg aria-hidden="true"><use href="#i-minus"/></svg></button><output>0</output><button data-d="1" aria-label="Add one"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></span></div></div></article>
+    </div>
+    <p class="empty" id="emptyMsg">Nothing matches — try “pizza” or “salad”.</p>
+  </div>
+</section>
+
+
+<div class="cart-scrim" id="cartScrim"></div>
+<aside class="cart is-empty" id="cart" role="dialog" aria-label="Your order" aria-hidden="true">
+  <div class="cart__head">
+    <b>Your order</b>
+    <button class="icon-btn" id="cartClose" aria-label="Close cart"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="cart__items" id="cartItems"></div>
+  <div class="cart__empty">
+    <svg aria-hidden="true"><use href="#i-cart"/></svg>
+    <p>Your order is empty.<br>Add something tasty from the menu.</p>
+    <button class="btn btn--tom" id="emptyGo">Browse the menu</button>
+  </div>
+  <div class="cart__sums">
+    <div class="freebar" aria-hidden="true"><i id="freeFill"></i></div>
+    <p id="freeHint">Add $35.00 more for free delivery</p>
+    <div class="row"><span>Subtotal</span><span id="sumSub">$0.00</span></div>
+    <div class="row"><span>Delivery</span><span id="sumDel">$2.99</span></div>
+    <div class="row total"><span>Total</span><span id="sumTotal">$0.00</span></div>
+  </div>
+  <div class="cart__qr">
+    <div class="qr-frame"><svg id="cartQr" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR code of this order"></svg></div>
+    <p><b>Order by QR too.</b> Scan this with another phone camera — it opens WhatsApp with this exact order pre-typed. Handy at shared tables.</p>
+  </div>
+  <div class="cart__cta">
+    <button class="btn btn--wa" id="waCheckout"><svg aria-hidden="true"><use href="#i-wa"/></svg>Send order on WhatsApp</button>
+    <p class="cart__note">Demo: opens a chat with +1 555-123-4567 · message is fully editable before sending</p>
+  </div>
+</aside>
+
+
+<section class="sec" id="qr">
+  <div class="container qr-grid">
+    <div class="rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-qrcode"/></svg>The QR ordering system</p>
+      <h2>Your venue, one code.<br>Print it tonight, take orders tomorrow.</h2>
+      <p class="sub" style="color:var(--muted);margin-top:12px">Every venue gets branded QR codes that open a WhatsApp chat with a prefilled, structured message — table-labeled, menu-linked, ready to confirm.</p>
+      <ul class="feat-list">
+        <li><i><svg aria-hidden="true"><use href="#i-bolt"/></svg></i><span><b>Zero friction for guests</b><small>No app install, no account, no PDF menus. Camera → chat in under five seconds.</small></span></li>
+        <li><i><svg aria-hidden="true"><use href="#i-qrcode"/></svg></i><span><b>Unique code per table &amp; branch</b><small>Orders arrive labeled “Table 7 · Downtown”, so nothing gets lost at rush hour.</small></span></li>
+        <li><i><svg aria-hidden="true"><use href="#i-globe"/></svg></i><span><b>Menu updates anytime</b><small>Sold out a dish? Change prices? Edit once — every printed code serves the new menu.</small></span></li>
+        <li><i><svg aria-hidden="true"><use href="#i-phone"/></svg></i><span><b>Everything stays in the chat</b><small>Order history, receipts and re-order shortcuts live where guests already are.</small></span></li>
+      </ul>
+    </div>
+
+    <div class="builder rv" aria-label="QR code generator">
+      <h3>Try the QR generator</h3>
+      <p>Enter a WhatsApp number, pick a table — the code on the right is real. Scan it.</p>
+      <div class="b-row">
+        <div class="b-field">
+          <label for="cc">Country</label>
+          <select id="cc">
+            <option value="1" selected>+1</option><option value="44">+44</option>
+            <option value="49">+49</option><option value="39">+39</option>
+            <option value="34">+34</option><option value="90">+90</option>
+            <option value="971">+971</option><option value="98">+98</option>
+          </select>
+        </div>
+        <div class="b-field grow">
+          <label for="num">WhatsApp number (digits only)</label>
+          <input id="num" type="tel" inputmode="numeric" value="5551234567" placeholder="5551234567">
+        </div>
+      </div>
+      <div class="b-field">
+        <label for="ctx">Where does this code go?</label>
+        <select id="ctx">
+          <option value="table">On a table (Table 1–12)</option>
+          <option value="pickup">Pickup counter</option>
+          <option value="delivery">Delivery flyer / packaging</option>
+        </select>
+      </div>
+      <div class="builder__qr">
+        <div class="qr-frame"><svg id="buildQr" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Generated WhatsApp QR code"></svg></div>
+        <div class="qr-meta">
+          <b id="qrCap">Table 4 · +1 555 123 4567</b>
+          <p id="qrLink">https://wa.me/…</p>
+        </div>
+      </div>
+      <div class="builder__acts">
+        <button class="btn btn--wa" id="qrTest"><svg aria-hidden="true"><use href="#i-wa"/></svg>Test this code</button>
+        <button class="btn btn--ghost" id="qrDl"><svg aria-hidden="true"><use href="#i-print"/></svg>Download SVG for print</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec sec--paper" id="venues">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-logo"/></svg>One system, two storefronts</p>
+      <h2>Built for kitchens and for shelves</h2>
+    </div>
+    <div class="venue-grid">
+      <article class="venue venue--r rv">
+        <i><svg aria-hidden="true"><use href="#f-pizza"/></svg></i>
+        <h3>For restaurants &amp; cafés</h3>
+        <p>Turn every table into a self-serve counter — and every downtime into pre-orders.</p>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Per-table QR codes with labeled incoming orders</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Daily specials and sold-out toggles, live in minutes</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Fewer wrong orders — guests type exactly what they want</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Gentle upsell prompts (“add a dessert for $3?”)</li>
+        </ul>
+      </article>
+      <article class="venue venue--g rv">
+        <i><svg aria-hidden="true"><use href="#f-basket"/></svg></i>
+        <h3>For grocery &amp; markets</h3>
+        <p>A full catalog on the codes on your window, crates and delivery bags.</p>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Products with units, weights and stock states</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Delivery windows, minimum order and zone checks</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>One-tap re-order of last week's basket from chat</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Produce updates every morning without reprinting</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="stats rv" style="margin-top:24px">
+      <div class="stat"><b><span class="c-num" data-count="12">12</span>k<em>+</em></b><span>orders / month via WhatsApp</span></div>
+      <div class="stat"><b><span class="c-num" data-count="38">38</span></b><span>venues live on the system</span></div>
+      <div class="stat"><b><span class="c-num" data-count="22">22</span>s</b><span>average first reply time</span></div>
+      <div class="stat"><b>4.9<em>★</em></b><span>guest rating across partners</span></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="reviews">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-star"/></svg>Partner feedback</p>
+      <h2>Owners who stopped losing orders</h2>
+    </div>
+    <div class="t-grid">
+      <article class="t-card rv">
+        <span class="stars" aria-label="5 out of 5"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+        <blockquote>“Weekend no-shows at the counter dropped to zero. Tables order while they sit down and the kitchen reads clean, labeled tickets in WhatsApp.”</blockquote>
+        <div class="t-who"><i>ML</i><span><b>Marta L.</b><small>Owner, Trattoria Rossi — Milan</small></span></div>
+      </article>
+      <article class="t-card rv">
+        <span class="stars" aria-label="5 out of 5"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+        <blockquote>“Our grocery QR on the shop window does real numbers now. Customers rebuild last week's basket in one tap — that feature alone paid for the year.”</blockquote>
+        <div class="t-who"><i>JO</i><span><b>James O.</b><small>Grocer, GreenCart — London</small></span></div>
+      </article>
+      <article class="t-card rv">
+        <span class="stars" aria-label="5 out of 5"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+        <blockquote>“Setup took one afternoon. We printed the QRs from the dashboard, stuck them on tables, and orders started arriving before the glue dried.”</blockquote>
+        <div class="t-who"><i>AS</i><span><b>Aya S.</b><small>Café Manager — Dubai</small></span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec sec--paper" id="pricing">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-shield"/></svg>Simple pricing</p>
+      <h2>Pay for orders, not for promises</h2>
+      <p class="sub">All plans include the web app, QR generator, unlimited menu edits and WhatsApp checkout.</p>
+    </div>
+    <div class="price-grid">
+      <article class="plan rv">
+        <h3>Table Starter</h3>
+        <p class="p-for">One venue · up to 20 tables</p>
+        <p class="p-amount"><b>$19</b><small>/ month</small></p>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>100 orders / month included</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>QR menu + WhatsApp ordering</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Menu &amp; price editor</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Email support</li>
+        </ul>
+        <a class="btn btn--ghost" href="#start">Start free trial</a>
+      </article>
+      <article class="plan plan--hot rv">
+        <span class="plan__flag">MOST POPULAR</span>
+        <h3>Bistro Pro</h3>
+        <p class="p-for">One venue · unlimited tables</p>
+        <p class="p-amount"><b>$49</b><small>/ month</small></p>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Unlimited orders</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Grocery catalog + delivery windows</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Order analytics (weekly digest)</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Payment links in chat</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Priority WhatsApp support</li>
+        </ul>
+        <a class="btn btn--tom" href="#start">Start free trial</a>
+      </article>
+      <article class="plan rv">
+        <h3>Chain &amp; Market</h3>
+        <p class="p-for">Multi-branch · franchises</p>
+        <p class="p-amount"><b>$129</b><small>/ month</small></p>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Everything in Bistro Pro</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Branch routing by QR location</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>POS / kitchen-printer export</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Custom branding &amp; languages</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Dedicated onboarding</li>
+        </ul>
+        <a class="btn btn--ghost" href="#start">Talk to us</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="faq">
+  <div class="container faq-wrap">
+    <div class="rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-check"/></svg>FAQ</p>
+      <h2>Questions we get before onboarding</h2>
+      <p class="sub" style="color:var(--muted);margin-top:10px">Something else on your mind? Message us — a human replies, usually within the hour.</p>
+    </div>
+    <div class="faq-list rv">
+      <details open><summary>Do my guests need to install anything?<i><svg aria-hidden="true"><use href="#i-plus"/></svg></i></summary><p>No. The menu is a web app that opens in any phone browser straight from the QR scan, and WhatsApp is already on their phone. That's the entire stack.</p></details>
+      <details><summary>How do orders reach the kitchen?<i><svg aria-hidden="true"><use href="#i-plus"/></svg></i></summary><p>As a structured WhatsApp message — items, quantities, table label and total. Staff confirm in chat. On Bistro Pro and above, orders can also print in the kitchen or export to your POS.</p></details>
+      <details><summary>Can I really use it for grocery delivery?<i><svg aria-hidden="true"><use href="#i-plus"/></svg></i></summary><p>Yes. The catalog supports units, weights and stock states, plus delivery windows, minimum order values and postcode checks. Codes work on windows, crates and packaging.</p></details>
+      <details><summary>What about payments?<i><svg aria-hidden="true"><use href="#i-plus"/></svg></i></summary><p>Your choice per venue: cash on delivery, a payment link pasted in chat, or integrated card payment links on Pro plans. The order flow never blocks on payment.</p></details>
+      <details><summary>Is each QR code unique per table?<i><svg aria-hidden="true"><use href="#i-plus"/></svg></i></summary><p>Yes — every table, counter or flyer gets its own code. Incoming orders are labeled with where they came from, and you can disable any code instantly (e.g., a closed terrace).</p></details>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="start" style="padding-top:0">
+  <div class="container">
+    <div class="cta rv">
+      <div>
+        <h2>Get your QR menu this week</h2>
+        <p class="sub">Send us your menu (a photo of it is fine) and your WhatsApp number — we'll return a working demo link and your first printed-ready codes.</p>
+        <ul class="bullets">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Free 14-day trial · no card required</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Setup call in your language, your timezone</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Have an idea? Message us first — we'll scope the right solution together before you order.</li>
+        </ul>
+      </div>
+      <form id="leadForm" novalidate>
+        <div class="f2">
+          <div><label for="ln">Your name</label><input id="ln" required placeholder="Jane Rossi"></div>
+          <div><label for="lw">WhatsApp number</label><input id="lw" type="tel" required placeholder="+1 555 000 0000"></div>
+        </div>
+        <div><label for="lt">Business type</label>
+          <select id="lt"><option>Restaurant</option><option>Café / bakery</option><option>Grocery store</option><option>Cloud kitchen</option><option>Franchise / chain</option></select>
+        </div>
+        <div><label for="lm">Anything we should know? (optional)</label><textarea id="lm" placeholder="35 seats, 12 tables, we already use WhatsApp Business…"></textarea></div>
+        <button class="btn btn--wa" type="submit"><svg aria-hidden="true"><use href="#i-wa"/></svg>Message us on WhatsApp</button>
+        <p class="mini">Demo form — in production this deep-links to your WhatsApp Business chat.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+
+<footer class="ft">
+  <div class="container ft__grid">
+    <div class="ft__about">
+      <a class="logo" href="#top">
+        <span class="logo__mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
+        <span><b>Olive Lane</b><small>Kitchen &amp; Market</small></span>
+      </a>
+      <p>A WhatsApp-first ordering web app for restaurants and grocery stores. Scan, tap, delivered — as a front-end concept demo.</p>
+    </div>
+    <div>
+      <h3>Product</h3>
+      <ul><li><a href="#menu">Live menu app</a></li><li><a href="#qr">QR generator</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul>
+    </div>
+    <div>
+      <h3>For business</h3>
+      <ul><li><a href="#venues">Restaurants &amp; cafés</a></li><li><a href="#venues">Grocery &amp; markets</a></li><li><a href="#start">Free trial</a></li><li><a href="#start">Contact sales</a></li></ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul>
+        <li><svg aria-hidden="true"><use href="#i-wa"/></svg><a href="https://wa.me/15551234567" target="_blank" rel="noopener">+1 555-123-4567 (demo)</a></li>
+        <li><svg aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+15551234567">Call the demo line</a></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>Mon–Sat · 9:00–21:00</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container ft__base">
+    <span>© 2025 Olive Lane — concept demo. All dishes &amp; numbers are placeholders.</span>
+    <span>Built as a single-file front-end showcase.</span>
+  </div>
+</footer>
+
+
+
+</body>
+</html>
