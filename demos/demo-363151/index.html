@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آزماتک | فروشگاه تجهیزات آزمایشگاهی — سانتریفیوژ، پیپت، اتوکلاو</title>
+<meta name="description" content="خرید تخصصی تجهیزات آزمایشگاهی: سانتریفیوژ، میکروپیپت، اتوکلاو، ترازوی دقیق و اسپکتروفتومتر با ضمانت اصالت کالا، گارانتی معتبر و ارسال سراسری. مشاوره: ۰۲۱-۹۱۰۹۸۷۰۰">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0B7285">
+
+<style>
+/* =====================================================================
+   AZMATEK — Landing Page | تک‌فایل، بدون هیچ لینک خارجی
+   ساختار سکشنی (هر بلوک = یک پارشال SCSS آینده):
+   00 Tokens/Base · 01 Topbar · 02 Header+CatNav · 03 Drawer(CSS-only)
+   04 Hero · 05 TrustStrip · 06 Categories · 07 Spotlight Product
+   08 Catalog · 09 Consumables · 10 Services · 11 WhyUs+Stats
+   12 Testimonials · 13 CTA · 14 Footer · 15 Toast · 16 Responsive
+   ===================================================================== */
+
+/* ---------- 00 · Tokens & Base ---------- */
+:root{
+  --ink:#102B3A; --ink-2:#33566B; --muted:#6A8798;
+  --bg:#F3F7F9; --card:#FFFFFF;
+  --line:#E2ECF1; --line-2:#C9DCE4;
+  --pri:#0B7285; --pri-d:#085D6D; --pri-soft:#E3F3F6; --pri-line:#BFE0E7;
+  --acc:#F08C00; --acc-soft:#FFF3DF;
+  --ok:#1F9D55; --ok-soft:#E6F6EC;
+  --red:#DE2C2C; --red-soft:#FCEBEB;
+  --r-s:10px; --r-m:14px; --r-l:20px;
+  --sh-1:0 1px 2px rgba(16,43,58,.05),0 8px 24px -14px rgba(16,43,58,.14);
+  --sh-2:0 20px 44px -18px rgba(16,43,58,.28);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --font:'Vazirmatn','Vazir','IRANSansX','Segoe UI',Tahoma,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.9;overflow-x:hidden}
+body:has(#navT:checked){overflow:hidden}
+::selection{background:var(--pri);color:#fff}
+::-webkit-scrollbar{width:10px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+button,label{font-family:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:1rem;color:var(--ink)}
+:focus-visible{outline:2px solid var(--pri);outline-offset:3px;border-radius:6px}
+section{scroll-margin-top:128px}
+.container{max-width:1240px;margin-inline:auto;padding-inline:clamp(18px,4vw,36px)}
+.sec{padding-block:clamp(60px,7.5vw,100px)}
+.sec--white{background:var(--card);border-block:1px solid var(--line)}
+h1,h2,h3{line-height:1.6}
+h1{font-size:clamp(1.85rem,4.2vw,2.9rem);font-weight:900}
+h2{font-size:clamp(1.4rem,2.9vw,2rem);font-weight:800}
+h3{font-weight:800}
+.vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--pri);font-weight:800;font-size:.92rem;margin-bottom:11px}
+.eyebrow svg{width:16px;height:16px}
+.sec-head{max-width:620px;margin-bottom:clamp(28px,4vw,46px)}
+.sec-head .sub{color:var(--muted);margin-top:9px;font-size:.95rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:.97rem;padding:13px 26px;border-radius:12px;transition:transform .25s var(--ease),background .25s,border-color .25s,color .25s,box-shadow .25s}
+.btn svg{width:18px;height:18px}
+.btn--pri{background:var(--pri);color:#fff}
+.btn--pri:hover{background:var(--pri-d);transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(11,114,133,.55)}
+.btn--ghost{border:1.5px solid var(--line-2);background:var(--card)}
+.btn--ghost:hover{border-color:var(--pri);color:var(--pri);transform:translateY(-2px)}
+/* Reveal — فقط وقتی JS هست فعال می‌شود؛ بدون JS همه‌چیز پیداست */
+html.js .rv{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .8s var(--ease)}
+html.js .rv.in{opacity:1;transform:none}
+.graph::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(11,114,133,.055) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(11,114,133,.055) 1px,transparent 1px);
+  background-size:30px 30px}
+
+/* ---------- 01 · Topbar ---------- */
+.topbar{background:var(--ink);color:#B7CDD9;font-size:.82rem}
+.topbar__in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:42px}
+.topbar__in p{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.topbar__in svg{width:14px;height:14px;color:#7EC7D6;flex:none}
+.topbar__in a{color:#fff;font-weight:700}
+.topbar__in a:hover{color:#7EC7D6}
+
+/* ---------- 02 · Header + CatNav ---------- */
+.site-header{position:sticky;top:0;z-index:60;background:var(--card);border-bottom:1px solid var(--line)}
+.site-header.scrolled{box-shadow:var(--sh-1)}
+.header__in{display:flex;align-items:center;gap:clamp(12px,2vw,24px);height:78px}
+.header__burger{display:none}
+.icon-btn{width:44px;height:44px;flex:none;border:1.5px solid var(--line);border-radius:12px;display:grid;place-items:center;position:relative;cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+.logo{display:flex;align-items:center;gap:11px;flex:none}
+.logo__mark{width:44px;height:44px;border-radius:13px;background:var(--pri);display:grid;place-items:center;color:#fff}
+.logo__mark svg{width:24px;height:24px}
+.logo b{display:block;font-size:1.18rem;font-weight:900;line-height:1.25}
+.logo small{display:block;font-size:.71rem;color:var(--muted);line-height:1.3}
+.search{flex:1;max-width:420px;margin-inline:auto;position:relative;min-width:0}
+.search svg{position:absolute;inset-inline-start:15px;top:50%;translate:0 -50%;width:18px;height:18px;color:var(--muted);pointer-events:none}
+.search input{width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 44px 12px 16px;font-size:.93rem;transition:border-color .25s,background .25s}
+.search input:focus{outline:none;border-color:var(--pri);background:#fff}
+.header__acts{display:flex;align-items:center;gap:10px;flex:none}
+.cart-badge{position:absolute;top:-7px;inset-inline-start:-7px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--acc);color:#fff;font-size:.7rem;font-weight:800;display:grid;place-items:center;transition:transform .3s var(--ease)}
+.cart-badge.pop{transform:scale(1.4)}
+.header__cta{flex:none}
+/* ردیف دسته‌بندی‌ها (دسکتاپ) */
+.catnav{border-top:1px solid var(--line);background:var(--card)}
+.catnav__in{display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none;height:52px}
+.catnav__in::-webkit-scrollbar{display:none}
+.catnav__in a{padding:8px 14px;border-radius:9px;font-weight:700;font-size:.9rem;color:var(--ink-2);white-space:nowrap;position:relative;transition:color .25s,background .25s}
+.catnav__in a:hover{color:var(--pri);background:var(--pri-soft)}
+.catnav__in a.is-hot{color:var(--acc)}
+.catnav__in span.sep{width:1px;height:22px;background:var(--line);margin-inline:6px;flex:none}
+
+/* ---------- 03 · Drawer (فقط CSS — از سمت راست) ---------- */
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(10,29,40,.55);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;cursor:pointer}
+#navT:checked ~ .scrim{opacity:1;visibility:visible}
+.m-nav{position:fixed;top:0;bottom:0;right:0;z-index:95;width:min(340px,86vw);background:var(--card);box-shadow:var(--sh-2);transform:translateX(101%);transition:transform .5s var(--ease);display:flex;flex-direction:column;padding:18px}
+#navT:checked ~ .m-nav{transform:none}
+.m-nav__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.m-nav__head b{font-size:1.05rem}
+.m-nav nav{display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.m-nav nav a{padding:12px 14px;border-radius:10px;font-weight:700;transition:background .25s,color .25s}
+.m-nav nav a:hover{background:var(--pri-soft);color:var(--pri)}
+.m-nav nav a small{color:var(--muted);font-weight:500;font-size:.75rem;display:block}
+.m-nav__foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:9px;font-size:.9rem;color:var(--muted)}
+.m-nav__foot a{display:inline-flex;align-items:center;gap:9px;font-weight:700;color:var(--ink)}
+.m-nav__foot svg{width:16px;height:16px;color:var(--pri)}
+
+/* ---------- 04 · Hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#FDFEFF 0%,var(--bg) 100%)}
+.hero__grid{position:relative;display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(28px,4vw,54px);align-items:center;padding-block:clamp(52px,6.5vw,86px)}
+.hero .lede{color:var(--muted);max-width:470px;margin-top:15px;font-size:1.03rem}
+.hero h1 .hl{color:var(--pri);border-bottom:3px solid var(--acc);padding-bottom:2px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hero__chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero__chips span{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.82rem;color:var(--ink-2)}
+.hero__chips svg{width:15px;height:15px;color:var(--ok)}
+/* صحنه‌ی دستگاه */
+.hero__stage{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:0 16px 18px;box-shadow:var(--sh-1)}
+.ruler{height:20px;border-bottom:1px solid var(--line);margin:0 -16px 8px;
+  background:repeating-linear-gradient(90deg,rgba(11,114,133,.25) 0 1px,transparent 1px 10px),
+             repeating-linear-gradient(90deg,rgba(11,114,133,.5) 0 1.5px,transparent 1.5px 60px)}
+.device{display:block;width:min(100%,480px);margin:4px auto 0;-webkit-tap-highlight-color:transparent;cursor:pointer}
+.rotorG{transform-box:fill-box;transform-origin:center}
+.device:hover .lid{transform:translateY(-56px);opacity:.5}
+.lid{transition:transform .55s var(--ease),opacity .55s}
+.device.is-running .rotorG{animation:spinF 1s linear infinite}
+.device.is-running .dev-inner{animation:jitter .14s linear infinite}
+@keyframes spinF{to{transform:rotate(360deg)}}
+@keyframes jitter{0%,100%{transform:translate(0,0)}50%{transform:translate(.7px,-.5px)}}
+.lcd{font-family:Consolas,'Courier New',monospace;font-weight:700;font-size:26px;fill:#7FE7F5;letter-spacing:2px}
+.lcd-l{font-family:Consolas,monospace;font-size:10px;fill:#4FB3C6;letter-spacing:1px}
+.dev-brand{font-size:11px;fill:#9FB6C0;letter-spacing:2px}
+.led-run{opacity:.2}
+.is-running .led-run{animation:ledBlink 1s ease-in-out infinite}
+@keyframes ledBlink{0%,100%{opacity:.15}50%{opacity:1}}
+.stage-hint{display:none}
+html.js .stage-hint{display:flex;align-items:center;justify-content:center;gap:7px;font-size:.8rem;color:var(--muted);margin-top:6px}
+.stage-hint svg{width:14px;height:14px;color:var(--pri)}
+.chip-f{position:absolute;display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-size:.8rem;font-weight:800;box-shadow:var(--sh-1);animation:floaty 5.5s ease-in-out infinite}
+.chip-f svg{width:15px;height:15px;color:var(--pri)}
+.chip-f small{display:block;font-weight:400;color:var(--muted);font-size:.68rem;line-height:1.3}
+.chip--a{top:46px;inset-inline-start:14px}
+.chip--b{top:40%;inset-inline-end:10px;animation-delay:1.2s}
+.chip--c{bottom:70px;inset-inline-start:6px;animation-delay:2.3s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ---------- 05 · TrustStrip ---------- */
+.truststrip{border-bottom:1px solid var(--line);background:var(--card)}
+.truststrip__in{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-block:18px}
+.tr{display:flex;align-items:center;gap:12px}
+.tr i{width:44px;height:44px;flex:none;border-radius:12px;background:var(--pri-soft);display:grid;place-items:center}
+.tr i svg{width:22px;height:22px;color:var(--pri)}
+.tr b{display:block;font-size:.88rem}
+.tr small{color:var(--muted);font-size:.74rem;line-height:1.4}
+
+/* ---------- 06 · Categories ---------- */
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:13px}
+.cat-tile{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:20px 10px 15px;transition:transform .35s var(--ease),border-color .3s,box-shadow .3s}
+.cat-tile i{width:58px;height:58px;border-radius:50%;background:var(--pri-soft);display:grid;place-items:center;transition:background .3s,color .3s}
+.cat-tile i svg{width:27px;height:27px;color:var(--pri)}
+.cat-tile b{font-size:.85rem;text-align:center}
+.cat-tile:hover{transform:translateY(-5px);border-color:var(--pri-line);box-shadow:var(--sh-1)}
+.cat-tile:hover i{background:var(--pri);color:#fff}
+.cat-tile:hover i svg{color:#fff}
+
+/* ---------- 07 · Spotlight (صفحه محصول) ---------- */
+.spot{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(20px,3vw,34px);box-shadow:var(--sh-1)}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);margin-bottom:20px}
+.crumbs a:hover{color:var(--pri)}
+.crumbs svg{width:11px;height:11px;opacity:.6}
+.spot__grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(24px,3.5vw,46px);align-items:start}
+.pv-fig{position:relative;background:#F6FAFB;border:1px solid var(--line);border-radius:16px;padding:18px 8px 10px;overflow:hidden}
+.pv-fig .off{position:absolute;top:14px;inset-inline-start:14px;z-index:2;background:var(--red);color:#fff;border-radius:99px;padding:5px 12px;font-size:.78rem;font-weight:800}
+.pv-fig svg.pv-svg{width:100%;height:auto}
+.pv-art--panel{display:none}
+.pv-fig[data-view="open"] .lid{transform:translateY(-56px);opacity:.5}
+.pv-fig[data-view="panel"] .pv-art--device{display:none}
+.pv-fig[data-view="panel"] .pv-art--panel{display:block}
+.thumbs{display:flex;gap:10px;margin-top:12px}
+.thumb{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--line);border-radius:11px;padding:10px 6px;font-size:.79rem;font-weight:700;color:var(--muted);cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.thumb svg{width:19px;height:19px;flex:none}
+.thumb:hover{border-color:var(--pri-line);color:var(--pri)}
+.thumb.active{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+.pv-title{font-size:clamp(1.22rem,2.1vw,1.55rem);font-weight:900}
+.pv-brand{color:var(--muted);font-size:.88rem;margin-top:2px}
+.pv-rate{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:9px;font-size:.85rem;color:var(--muted)}
+.stars{display:inline-flex;gap:2px}
+.stars svg{width:15px;height:15px;color:var(--acc)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.badge{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:6px 13px;font-size:.77rem;font-weight:800}
+.badge svg{width:14px;height:14px}
+.badge--ok{background:var(--ok-soft);color:var(--ok)}
+.badge--line{border:1px solid var(--line-2);color:var(--ink-2)}
+.badge--line svg{color:var(--pri)}
+.attr-list{list-style:none;margin-top:16px;border-top:1px dashed var(--line-2)}
+.attr-list li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line-2);font-size:.9rem}
+.attr-list li>span:first-child{color:var(--muted)}
+.attr-list b{font-weight:800}
+.swatches{display:flex;gap:8px}
+.swatch{width:26px;height:26px;border-radius:50%;background:var(--c);border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line-2);cursor:pointer;transition:box-shadow .25s,transform .25s}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{box-shadow:0 0 0 2px var(--pri)}
+.buy-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:18px}
+.price{display:flex;align-items:baseline;gap:8px}
+.price del{color:var(--muted);font-size:.88rem}
+.price b{font-size:1.42rem;font-weight:900}
+.price small{color:var(--muted)}
+.qty{display:inline-flex;align-items:center;border:1.5px solid var(--line-2);border-radius:12px;overflow:hidden}
+.qty button{width:40px;height:44px;display:grid;place-items:center;cursor:pointer;transition:background .25s,color .25s}
+.qty button svg{width:15px;height:15px}
+.qty button:hover{background:var(--pri-soft);color:var(--pri)}
+.qty output{width:44px;text-align:center;font-weight:800}
+.pv-total{font-size:.82rem;color:var(--muted);margin-top:6px}
+.pv-total b{color:var(--ink)}
+.pv-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.pv-ctas .btn{flex:1;min-width:190px}
+/* تب‌ها — بدون JS همه پن‌ها نمایان */
+.tabs{margin-top:26px;border-top:1px solid var(--line)}
+.tablist{display:flex;gap:6px;padding-top:13px;flex-wrap:wrap}
+.tab{padding:10px 18px;border-radius:10px;font-weight:700;font-size:.92rem;color:var(--muted);cursor:pointer;transition:background .25s,color .25s}
+.tab:hover{color:var(--pri)}
+html.js .tab[aria-selected="true"]{background:var(--pri-soft);color:var(--pri)}
+html.js .pane{padding:16px 4px 0}
+html.js .pane+.pane{padding-top:16px}
+.pane{padding:14px 4px 0;font-size:.94rem;color:var(--ink-2)}
+html.js .pane:not(.active){display:none}
+.spec-tbl{display:grid;grid-template-columns:1fr 1fr;gap:6px 32px;list-style:none}
+.spec-tbl li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.spec-tbl span{color:var(--muted)}
+.spec-tbl b{font-weight:700}
+.pane ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.pane ul li{display:flex;align-items:center;gap:9px}
+.pane ul svg{width:15px;height:15px;color:var(--ok);flex:none}
+
+/* ---------- 08 · Catalog ---------- */
+.catalog__bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:24px}
+.fchips{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+.fchip{padding:9px 17px;border-radius:99px;border:1.5px solid var(--line-2);background:var(--card);font-weight:700;font-size:.87rem;color:var(--ink-2);cursor:pointer;transition:all .25s}
+.fchip:hover{border-color:var(--pri);color:var(--pri)}
+.fchip.active{background:var(--pri);border-color:var(--pri);color:#fff}
+.sort{display:inline-flex;align-items:center;gap:9px;border:1.5px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card)}
+.sort svg{width:16px;height:16px;color:var(--muted)}
+.sort select{border:none;background:none;font-weight:700;font-size:.88rem;cursor:pointer}
+.sort select:focus{outline:none}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:17px}
+.product-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;transition:transform .4s var(--ease),box-shadow .35s,border-color .3s}
+.product-card:hover{transform:translateY(-6px);box-shadow:var(--sh-2);border-color:var(--pri-line)}
+.product-card.is-hide{display:none}
+.product-card__media{position:relative;background:#F6FAFB;border-bottom:1px solid var(--line);display:grid;place-items:center;padding:28px 10px 20px}
+.product-card__media::after{content:"";position:absolute;inset-inline:14%;bottom:11px;height:9px;border-radius:50%;background:rgba(16,43,58,.06);transition:transform .4s var(--ease)}
+.product-card__art{width:84px;height:84px;color:var(--pri);transition:transform .45s var(--ease)}
+.product-card:hover .product-card__art{transform:translateY(-6px) scale(1.06)}
+.product-card:hover .product-card__media::after{transform:scaleX(.85)}
+.tag{position:absolute;top:12px;inset-inline-start:12px;border-radius:99px;padding:4px 11px;font-size:.71rem;font-weight:800}
+.tag--hot{background:var(--acc-soft);color:var(--acc)}
+.tag--rna{background:var(--pri-soft);color:var(--pri)}
+.tag--new{background:var(--red-soft);color:var(--red)}
+.product-card__like{position:absolute;top:10px;inset-inline-end:10px;width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:color .25s,border-color .25s,transform .25s}
+.product-card__like svg{width:16px;height:16px}
+.product-card__like:hover{color:var(--red);border-color:var(--red);transform:scale(1.08)}
+.product-card__body{display:flex;flex-direction:column;gap:8px;padding:15px;flex:1}
+.product-card__brand{font-size:.71rem;font-weight:800;letter-spacing:1px;color:var(--muted)}
+.product-card__title{font-size:.96rem;line-height:1.7;min-height:3.2em}
+.spec-row{list-style:none;display:flex;flex-wrap:wrap;gap:5px 13px;font-size:.77rem;color:var(--muted)}
+.spec-row li{display:inline-flex;align-items:center;gap:5px}
+.spec-row svg{width:13px;height:13px;color:var(--pri)}
+.product-card__foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:11px;border-top:1px dashed var(--line)}
+.price-s b{font-size:1rem;font-weight:900}
+.price-s small{color:var(--muted);font-size:.74rem;margin-inline-start:4px}
+.cart-btn{width:42px;height:42px;border-radius:11px;background:var(--pri-soft);color:var(--pri);display:grid;place-items:center;cursor:pointer;transition:background .25s,color .25s,transform .2s}
+.cart-btn svg{width:19px;height:19px}
+.cart-btn:hover{background:var(--pri);color:#fff;transform:translateY(-2px)}
+.cart-btn.ok{background:var(--ok);color:#fff}
+
+/* ---------- 09 · Consumables scroller ---------- */
+.cons{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(20px,3vw,32px)}
+.cons__head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.cons__nav{display:flex;gap:8px}
+.cons__nav button{width:42px;height:42px;border:1.5px solid var(--line-2);border-radius:11px;display:grid;place-items:center;cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.cons__nav button:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+.cons__nav svg{width:17px;height:17px}
+.cons__nav .prev svg{transform:scaleX(-1)}
+.c-track{display:flex;gap:13px;overflow-x:auto;scroll-snap-type:x mandatory;cursor:grab;scrollbar-width:none;padding-bottom:4px}
+.c-track::-webkit-scrollbar{display:none}
+.c-track.is-drag{cursor:grabbing;scroll-snap-type:none}
+.c-card{flex:0 0 202px;scroll-snap-align:start;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-m);padding:17px;display:flex;flex-direction:column;gap:7px;transition:border-color .3s,transform .3s var(--ease);user-select:none}
+.c-card:hover{border-color:var(--pri-line);transform:translateY(-4px)}
+.c-card__ic{width:45px;height:45px;border-radius:12px;background:var(--pri-soft);display:grid;place-items:center;color:var(--pri)}
+.c-card__ic svg{width:22px;height:22px}
+.c-card h3{font-size:.9rem}
+.c-card p{font-size:.77rem;color:var(--muted)}
+.c-card__foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:7px}
+.c-card__foot b{font-size:.93rem}
+.c-card__foot small{color:var(--muted);font-size:.71rem;margin-inline-start:3px}
+.c-add{width:36px;height:36px;border-radius:10px;background:var(--pri);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .25s,transform .2s}
+.c-add svg{width:16px;height:16px}
+.c-add:hover{background:var(--pri-d);transform:scale(1.08)}
+.c-add.ok{background:var(--ok)}
+.cons__prog{height:4px;border-radius:99px;background:var(--line);margin-top:15px;overflow:hidden}
+.cons__prog i{display:block;height:100%;width:25%;background:var(--pri);border-radius:99px;transition:width .2s}
+
+/* ---------- 10 · Services (دوستونه مطابق موکاپ) ---------- */
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.svc-item{display:flex;gap:15px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:19px 21px;transition:border-color .3s,transform .35s var(--ease),box-shadow .3s}
+.svc-item:hover{border-color:var(--pri-line);transform:translateX(-4px);box-shadow:var(--sh-1)}
+.svc-item i{width:47px;height:47px;flex:none;border-radius:13px;background:var(--pri-soft);display:grid;place-items:center;transition:background .3s}
+.svc-item i svg{width:23px;height:23px;color:var(--pri);transition:color .3s}
+.svc-item:hover i{background:var(--pri)}
+.svc-item:hover i svg{color:#fff}
+.svc-item h3{font-size:.96rem;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.svc-item h3 small{font-size:.69rem;font-weight:600;color:var(--muted);letter-spacing:.4px}
+.svc-item p{font-size:.84rem;color:var(--muted);margin-top:2px}
+
+/* ---------- 11 · WhyUs + Stats ---------- */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:24px 22px;position:relative;overflow:hidden;transition:transform .4s var(--ease),border-color .3s}
+.feat::after{content:"";position:absolute;top:0;inset-inline-start:0;width:100%;height:3px;background:var(--pri);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.feat:hover{transform:translateY(-5px);border-color:var(--pri-line)}
+.feat:hover::after{transform:scaleX(1)}
+.feat i{width:48px;height:48px;border-radius:13px;background:var(--pri-soft);display:grid;place-items:center;margin-bottom:13px}
+.feat i svg{width:24px;height:24px;color:var(--pri)}
+.feat h3{font-size:1rem;margin-bottom:4px}
+.feat p{font-size:.87rem;color:var(--muted)}
+.stats{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;margin-top:24px}
+.stat{padding:clamp(24px,3vw,40px) 18px;text-align:center;border-inline-start:1px solid var(--line)}
+.stat:first-child{border-inline-start:none}
+.stat b{display:block;font-size:clamp(1.6rem,2.9vw,2.4rem);font-weight:900;color:var(--pri);line-height:1.4}
+.stat:nth-child(2) b{color:var(--acc)}
+.stat span{color:var(--muted);font-size:.87rem}
+
+/* ---------- 12 · Testimonials — بدون JS همه پشت‌هم ---------- */
+.t-wrap{max-width:760px}
+.t-slide{display:block;padding-block:6px}
+html.js .t-wrap.is-slider .t-slide{display:none}
+html.js .t-wrap.is-slider .t-slide.active{display:block;animation:tIn .55s var(--ease)}
+@keyframes tIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+html.js .t-wrap.is-slider .t-slide+.t-slide{margin-top:0}
+.t-slide .tq{width:42px;height:42px;color:var(--pri);margin-bottom:12px}
+.t-slide blockquote{font-size:clamp(1.08rem,1.9vw,1.4rem);font-weight:700;line-height:2}
+.t-who{display:flex;flex-wrap:wrap;align-items:center;gap:9px 15px;margin-top:15px;color:var(--muted);font-size:.89rem}
+.t-who b{color:var(--ink)}
+.t-ctl{display:none}
+html.js .t-wrap.is-slider .t-ctl{display:flex;align-items:center;gap:15px;margin-top:24px}
+.t-btn{width:45px;height:45px;border:1.5px solid var(--line-2);border-radius:12px;display:grid;place-items:center;cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.t-btn svg{width:18px;height:18px}
+.t-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+.t-btn.prev svg{transform:scaleX(-1)}
+.t-dots{display:flex;gap:7px}
+.t-dots button{width:9px;height:9px;border-radius:99px;background:var(--line-2);cursor:pointer;transition:background .3s,width .3s var(--ease)}
+.t-dots button.on{background:var(--pri);width:25px}
+
+/* ---------- 13 · CTA ---------- */
+.news{position:relative;overflow:hidden;background:var(--ink);color:#fff;border-radius:var(--r-l);padding:clamp(28px,4.2vw,48px);display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center}
+.news::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:30px 30px}
+.news h2{color:#fff}
+.news p{color:#AEC6D2;margin-top:7px;font-size:.94rem}
+.news form{position:relative;display:flex;gap:10px}
+.news input{flex:1;min-width:0;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 18px;color:#fff}
+.news input::placeholder{color:#7E99A6}
+.news input:focus{outline:none;border-color:#7EC7D6}
+.news__note{grid-column:1/-1;font-size:.79rem;color:#7E99A6;position:relative}
+.news__note a{color:#7EC7D6;font-weight:700}
+
+/* ---------- 14 · Footer ---------- */
+.site-footer{background:#0A1F2E;color:#9DB4C0;margin-top:clamp(56px,7vw,88px)}
+.foot__grid{display:grid;grid-template-columns:2fr 1fr 1.2fr 1.35fr;gap:clamp(22px,3vw,42px);padding-block:clamp(38px,5vw,60px)}
+.site-footer .logo b{color:#fff}
+.site-footer .logo small{color:#7E99A6}
+.foot__about p{font-size:.89rem;margin-top:13px;max-width:300px}
+.foot__col h3{color:#fff;font-size:.98rem;margin-bottom:14px}
+.foot__col ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:.89rem}
+.foot__col a:hover{color:#7EC7D6}
+.foot__col li{display:flex;align-items:center;gap:9px}
+.foot__col svg{width:15px;height:15px;color:#7EC7D6;flex:none}
+.foot__base{border-top:1px solid rgba(255,255,255,.08);padding-block:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;font-size:.79rem}
+.foot__certs{display:flex;gap:12px;flex-wrap:wrap}
+.foot__certs span{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:6px 12px}
+.foot__certs svg{width:14px;height:14px;color:#7EC7D6}
+
+/* ---------- 15 · Toast ---------- */
+.toast-root{position:fixed;bottom:22px;inset-inline-start:22px;z-index:120;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:11px;background:var(--ink);color:#fff;border-radius:13px;padding:13px 18px;max-width:min(360px,86vw);font-size:.9rem;box-shadow:var(--sh-2);opacity:0;transform:translateY(14px);transition:opacity .4s,transform .5s var(--ease)}
+.toast.show{opacity:1;transform:none}
+.toast svg{width:18px;height:18px;color:#7EC7D6;flex:none}
+.toast.err svg{color:#FF8787}
+
+/* ---------- 16 · Responsive ---------- */
+@media (max-width:1080px){
+  .header__nav,.catnav{display:none}
+  .header__burger{display:grid}
+  .hero__grid{grid-template-columns:1fr}
+  .spot__grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-top:1px solid var(--line)}
+  .stat:nth-child(-n+2){border-top:none}
+  .stat:nth-child(3){border-inline-start:none}
+  .truststrip__in{grid-template-columns:1fr 1fr;gap:14px}
+  .news{grid-template-columns:1fr}
+}
+@media (max-width:900px){
+  .search{display:none}
+  .svc-grid{grid-template-columns:1fr}
+  .foot__grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .header__cta{display:none}
+  .hero__cta .btn{flex:1}
+  .chip-f{display:none}
+  .feat-grid{grid-template-columns:1fr}
+  .foot__grid{grid-template-columns:1fr}
+  .spec-tbl{grid-template-columns:1fr}
+  .news form{flex-direction:column}
+  .topbar__in p:nth-child(2){display:none}
+  .thumb span{display:none}
+  .thumb{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4M11 3v6L5.6 18a2.4 2.4 0 0 0 2.1 3.6h8.6A2.4 2.4 0 0 0 18.4 18L13 9V3"/><path d="M7.5 15h9"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></g></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2.2l2.3 10.5A2 2 0 0 0 9.5 17h8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="10" cy="20.5" r="1.4"/><circle cx="18" cy="20.5" r="1.4"/></g></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.5 3h3L10 7.2 8 8.8a12.5 12.5 0 0 0 6.2 6.2l1.6-2 4.2 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M20 12H4M10.5 5.5 4 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.8 6.2.9-4.5 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L3 9.5l6.2-.9L12 2.8Z" fill="currentColor"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M10.2 5.5C6.5 7.2 4.4 9.8 4.4 13.3c0 2.8 1.8 4.7 4 4.7 2 0 3.5-1.5 3.5-3.4 0-1.8-1.3-3.2-3.1-3.2h-.6c.4-1.8 1.8-3.5 3.6-4.5l-1.6-1.4Zm8.6 0c-3.7 1.7-5.8 4.3-5.8 7.8 0 2.8 1.8 4.7 4 4.7 2 0 3.5-1.5 3.5-3.4 0-1.8-1.3-3.2-3.1-3.2h-.6c.4-1.8 1.8-3.5 3.6-4.5l-1.6-1.4Z" fill="currentColor"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5S3.5 15 3.5 9.2A4.6 4.6 0 0 1 8.1 4.6c1.7 0 3.1.9 3.9 2.2.8-1.3 2.2-2.2 3.9-2.2a4.6 4.6 0 0 1 4.6 4.6C20.5 15 12 20.5 12 20.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 7 2.8v5.4c0 4.5-3 8-7 9.8-4-1.8-7-5.3-7-9.8V5.8L12 3Z"/><path d="m9 11.8 2.2 2.2 4.2-4.4"/></g></symbol>
+  <symbol id="i-shield-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 7 2.8v5.4c0 4.5-3 8-7 9.8-4-1.8-7-5.3-7-9.8V5.8L12 3Z"/><path d="M12 9v6M9 12h6"/></g></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h11v9H2zM13 10h4.2L20.5 13v3H13"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/></g></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></g></symbol>
+  <symbol id="i-headset" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6.5" rx="1.6"/><rect x="17" y="13" width="4" height="6.5" rx="1.6"/><path d="M20 19.5a3 3 0 0 1-3 3h-3"/></g></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 18 18 6"/><circle cx="7.5" cy="7.5" r="2.2"/><circle cx="16.5" cy="16.5" r="2.2"/></g></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.4-6.5-10.2A6.5 6.5 0 0 1 12 4.3a6.5 6.5 0 0 1 6.5 6.5C18.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.7" r="2.3"/></g></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4.5 8 7.5 5.5L19.5 8"/></g></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V4.8a1.6 1.6 0 0 1 3.2 0V10m0-2.4a1.6 1.6 0 0 1 3.2 0V10m0-1.2a1.6 1.6 0 0 1 3.2 0v4.8c0 4-2.6 6.8-6.6 6.8-3 0-4.4-1.4-6-4.2L4.4 13c-.6-1.1.2-2.4 1.5-2.4.8 0 1.4.4 1.9 1.2L9 13.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.8 5L3.4 16.8a2.1 2.1 0 1 0 3 3l5.4-5.5a4.2 4.2 0 0 0 5.1-5.8l-2.9 2.8-2.1-2.1 2.8-2.9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cf" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27h22M7 27v-3a9 6.5 0 0 1 18 0v3"/><circle cx="16" cy="17" r="3.2"/><path d="M16 10.5v1.8M16 22v1.8M9.5 17h1.8M20.7 17h1.8"/></g></symbol>
+  <symbol id="i-pipette" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.5h4M17.5 2.5v4M13 6.5h9.5l-2 8h-5.5l-2-8Z"/><path d="M17.7 14.5 16 21"/><circle cx="15.6" cy="22" r="1"/></g></symbol>
+  <symbol id="i-autoclave" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="13" rx="2.5"/><circle cx="12" cy="14.5" r="4"/><path d="M6.5 8V5.5h11V8M9 2.8c.8.7.8 1.5 0 2.2M12 2.8c.8.7.8 1.5 0 2.2M15 2.8c.8.7.8 1.5 0 2.2"/></g></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="11" width="17" height="10" rx="2.5"/><rect x="13.5" y="13.5" width="4.5" height="3" rx="1"/><path d="M8 11V9.5"/><ellipse cx="8" cy="8" rx="3.5" ry="1.4"/></g></symbol>
+  <symbol id="i-spectro" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="9" width="17" height="11" rx="2.5"/><path d="M6.5 13.5h5M6.5 16.5h3"/><rect x="14.5" y="11.5" width="4" height="3.5" rx="1"/><path d="M9.5 9V6.5h5V9"/></g></symbol>
+  <symbol id="i-bath" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12h17v4.5a4 4 0 0 1-4 4h-9a4 4 0 0 1-4-4V12Z"/><path d="M6.5 9.5c1-1.4 2-1.4 3 0s2 1.4 3 0 2-1.4 3 0"/><path d="M6 12V5.5a2 2 0 0 1 4 0"/></g></symbol>
+  <symbol id="i-incub" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 20v-5h8v5M8 4v3M16 4v3"/><circle cx="12" cy="11" r="2"/></g></symbol>
+  <symbol id="i-micro" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m13.5 3 2.6 2.6-2.3 2.3-2.6-2.6L13.5 3Z"/><path d="M12.6 7 8 11.6a5.6 5.6 0 0 0 7.9 7.9l.7-.7"/><path d="M4 21.5h16M8 21.5c-1.7-1.3-2.7-2.8-2.7-4.2 0-1 .3-1.9 1-2.7"/></g></symbol>
+  <symbol id="i-tube" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v3.5h4V3"/><path d="M10 6.5v11a2.5 2.5 0 0 0 5 0v-11"/><path d="M10 12h4"/></g></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 17a8 8 0 0 1 16 0"/><path d="m12 17 4.2-5"/><circle cx="12" cy="17" r="1.6"/></g></symbol>
+  <symbol id="c-roll" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M5.2 14.5C4 16 3.5 17.5 4 19"/></g></symbol>
+  <symbol id="c-bottle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5h4M10.5 2.5V6c-2 1-3.5 2.7-3.5 5v6.5a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3V11c0-2.3-1.5-4-3.5-5V2.5"/><path d="M7.5 13.5h9"/></g></symbol>
+  <symbol id="s-drop" viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0C6 10 12 3 12 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 14a2.6 2.6 0 0 0 2 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="s-microbe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M7 7 5.6 5.6M18.4 5.6 17 7M7 17l-1.4 1.4M18.4 18.4 17 17"/><circle cx="10.5" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="13.5" cy="13.5" r=".9" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="s-molecule" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 6.5 6.8 16h10.4L12 6.5Z"/><circle cx="12" cy="5" r="2.1"/><circle cx="5.5" cy="17.5" r="2.1"/><circle cx="18.5" cy="17.5" r="2.1"/><circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="s-atom" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="s-dna" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 2.5c0 6.5 10 6.5 10 13s-10 6-10 6"/><path d="M17 2.5c0 6.5-10 6.5-10 13s10 6 10 6"/><path d="M8.6 5.5h6.8M7.4 12h9.2M8.6 18.5h6.8"/></g></symbol>
+  <symbol id="s-syringe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.5h2.4M12 2.5V6"/><rect x="9.5" y="6" width="5" height="9" rx="1"/><path d="M9.5 9h1.6M13 9h1.5"/><path d="M12 15v6.5"/></g></symbol>
+  <symbol id="s-ab" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5v-6M12 15.5 7.3 9M12 15.5 16.7 9"/><circle cx="6.8" cy="7.5" r="1.7"/><circle cx="17.2" cy="7.5" r="1.7"/></g></symbol>
+</svg>
+
+<div class="toast-root" id="toastRoot" aria-live="polite"></div>
+
+
+<input type="checkbox" id="navT" class="vh" aria-label="باز و بسته کردن منو">
+
+
+<div class="topbar">
+  <div class="container topbar__in">
+    <p><svg aria-hidden="true"><use href="#i-shield"/></svg>ضمانت اصالت و گارانتی معتبر کالا</p>
+    <p><svg aria-hidden="true"><use href="#i-truck"/></svg>ارسال سریع به سراسر کشور</p>
+    <p><svg aria-hidden="true"><use href="#i-phone"/></svg>مشاوره تخصصی: <a href="tel:+982191098700" dir="ltr">۰۲۱ – ۹۱۰۹ ۸۷۰۰</a></p>
+  </div>
+</div>
+
+
+<header class="site-header" id="siteHeader">
+  <div class="container header__in">
+    <label for="navT" class="icon-btn header__burger" tabindex="0" role="button" aria-label="باز کردن منو">
+      <svg aria-hidden="true"><use href="#i-menu"/></svg>
+    </label>
+    <a class="logo" href="#home" aria-label="آزماتک — صفحه اصلی">
+      <span class="logo__mark"><svg aria-hidden="true"><use href="#i-flask"/></svg></span>
+      <span><b>آزماتک</b><small>فروشگاه تجهیزات آزمایشگاهی</small></span>
+    </a>
+    <form class="search" id="searchForm" role="search">
+      <svg aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="searchInput" type="search" placeholder="جستجو در بین ۲٬۵۰۰ کالای آزمایشگاهی…" aria-label="جستجو">
+    </form>
+    <div class="header__acts">
+      <button class="icon-btn" id="cartBtn" aria-label="سبد خرید">
+        <svg aria-hidden="true"><use href="#i-cart"/></svg>
+        <span class="cart-badge" id="cartCount">۲</span>
+      </button>
+      <a class="btn btn--pri header__cta" href="#contact">تماس با کارشناس</a>
+    </div>
+  </div>
+  <nav class="catnav" aria-label="دسته‌بندی محصولات">
+    <div class="container catnav__in">
+      <a href="#cats">همه دسته‌ها</a><span class="sep" aria-hidden="true"></span>
+      <a href="#products">سانتریفیوژ</a>
+      <a href="#products">پیپت و مایکروولوم</a>
+      <a href="#products">اتوکلاو و استریل</a>
+      <a href="#products">ترازوی دقیق</a>
+      <a href="#products">اسپکتروفتومتر</a>
+      <a href="#products">انکوباتور و حمام آب</a>
+      <a href="#consumables" class="is-hot">اقلام مصرفی</a>
+      <a href="#services">خدمات آزمایشگاهی</a>
+    </div>
+  </nav>
+</header>
+
+
+<label for="navT" class="scrim" aria-hidden="true" tabindex="-1"></label>
+<aside class="m-nav" role="dialog" aria-label="منوی اصلی">
+  <div class="m-nav__head">
+    <b>منوی آزماتک</b>
+    <label for="navT" class="icon-btn" role="button" tabindex="0" aria-label="بستن منو"><svg aria-hidden="true"><use href="#i-close"/></svg></label>
+  </div>
+  <nav>
+    <a href="#home">خانه</a>
+    <a href="#cats">دسته‌بندی محصولات</a>
+    <a href="#products">محصولات<small>سانتریفیوژ، پیپت، اتوکلاو و…</small></a>
+    <a href="#consumables">اقلام مصرفی</a>
+    <a href="#services">خدمات آزمایشگاهی</a>
+    <a href="#about">درباره آزماتک</a>
+    <a href="#contact">تماس و مشاوره خرید</a>
+  </nav>
+  <div class="m-nav__foot">
+    <a href="tel:+982191098700"><svg aria-hidden="true"><use href="#i-phone"/></svg><span dir="ltr">۰۲۱ – ۹۱۰۹ ۸۷۰۰</span></a>
+    <a href="mailto:sales@azmatek.ir"><svg aria-hidden="true"><use href="#i-mail"/></svg>sales@azmatek.ir</a>
+    <span>شنبه تا پنجشنبه — ۸:۳۰ تا ۱۸</span>
+  </div>
+</aside>
+
+<main>
+
+<section class="hero graph" id="home">
+  <div class="container hero__grid">
+    <div>
+      <p class="eyebrow rv"><svg aria-hidden="true"><use href="#i-flask"/></svg>فروشگاه تخصصی تجهیزات آزمایشگاهی</p>
+      <h1 class="rv">تجهیزات دقیق،<br>برای <span class="hl">نتایج تکرارپذیر</span></h1>
+      <p class="lede rv">از سانتریفیوژ و میکروپیپت تا اتوکلاو و اسپکتروفتومتر — با ضمانت اصالت، گارانتی معتبر و پشتیبانی فنی که واقعاً پاسخ می‌دهد.</p>
+      <div class="hero__cta rv">
+        <a class="btn btn--pri" href="#products">مشاهده محصولات<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="#contact">مشاوره تخصصی رایگان</a>
+      </div>
+      <div class="hero__chips rv">
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>ضمانت اصالت کالا</span>
+        <span><svg aria-hidden="true"><use href="#i-truck"/></svg>ارسال سراسری</span>
+        <span><svg aria-hidden="true"><use href="#i-headset"/></svg>پشتیبانی فنی مادام‌العمر</span>
+      </div>
+    </div>
+
+    <div class="hero__stage rv" id="heroStage">
+      <div class="ruler" aria-hidden="true"></div>
+      <div class="device" id="deviceBtn" role="button" tabindex="0" aria-pressed="false" aria-label="روشن یا خاموش کردن سانتریفیوژ نمونه">
+        <svg viewBox="0 0 520 430" role="img" aria-label="سانتریفیوژ آزمایشگاهی D3024">
+          <ellipse cx="260" cy="404" rx="175" ry="14" fill="rgba(16,43,58,.08)"/>
+          <g class="dev-inner">
+            <rect x="132" y="384" width="44" height="12" rx="5" fill="#DCE7EC"/>
+            <rect x="344" y="384" width="44" height="12" rx="5" fill="#DCE7EC"/>
+            <rect x="104" y="204" width="312" height="182" rx="26" fill="#fff" stroke="#D5E2E8" stroke-width="2"/>
+            <g stroke="#D5E2E8" stroke-width="2" stroke-linecap="round"><path d="M128 366h32M128 374h32M128 382h32"/></g>
+            <circle cx="260" cy="196" r="94" fill="#F7FBFD" stroke="#C9DDE6" stroke-width="2"/>
+            <circle cx="260" cy="196" r="82" fill="none" stroke="#E3EEF3" stroke-width="1.5" stroke-dasharray="3 6"/>
+            <g transform="translate(260,196)">
+              <g class="rotorG">
+                <g id="rt1"><rect x="-9" y="-92" width="18" height="44" rx="8" fill="#fff" stroke="#BFD6DE" stroke-width="1.6"/><rect x="-7" y="-102" width="14" height="12" rx="5" fill="currentColor"/></g>
+                <use href="#rt1" style="color:#E03131"/><use href="#rt1" transform="rotate(30)" style="color:#1971C2"/>
+                <use href="#rt1" transform="rotate(60)" style="color:#1F9D55"/><use href="#rt1" transform="rotate(90)" style="color:#F08C00"/>
+                <use href="#rt1" transform="rotate(120)" style="color:#9C36B5"/><use href="#rt1" transform="rotate(150)" style="color:#0B7285"/>
+                <use href="#rt1" transform="rotate(180)" style="color:#E03131"/><use href="#rt1" transform="rotate(210)" style="color:#1971C2"/>
+                <use href="#rt1" transform="rotate(240)" style="color:#1F9D55"/><use href="#rt1" transform="rotate(270)" style="color:#F08C00"/>
+                <use href="#rt1" transform="rotate(300)" style="color:#9C36B5"/><use href="#rt1" transform="rotate(330)" style="color:#0B7285"/>
+                <circle r="29" fill="var(--paint,#0B7285)"/><circle r="10" fill="#06333D"/><circle r="3" fill="#8FE3F0"/>
+              </g>
+            </g>
+            <g class="lid">
+              <circle cx="260" cy="196" r="88" fill="rgba(140,205,220,.16)" stroke="#93C6D6" stroke-width="3"/>
+              <path d="M198 156a76 76 0 0 1 36-30" stroke="rgba(255,255,255,.85)" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <rect x="243" y="94" width="34" height="13" rx="6.5" fill="var(--paint,#0B7285)"/>
+            </g>
+            <rect x="146" y="312" width="136" height="46" rx="10" fill="#07333D" stroke="#0C4A57"/>
+            <circle class="led-run" cx="156" cy="322" r="3.5" fill="#51CF66"/>
+            <text id="rpmOut" x="198" y="346" text-anchor="middle" class="lcd">0000</text>
+            <text x="260" y="330" class="lcd-l">RPM</text>
+            <text x="260" y="348" class="lcd-l">MAX 4500</text>
+            <rect x="300" y="318" width="30" height="17" rx="8.5" fill="var(--paint,#0B7285)"/>
+            <rect x="338" y="318" width="30" height="17" rx="8.5" fill="#EDF4F7" stroke="#D5E2E8"/>
+            <rect x="300" y="343" width="30" height="17" rx="8.5" fill="#EDF4F7" stroke="#D5E2E8"/>
+            <circle cx="384" cy="334" r="15" fill="#EDF4F7" stroke="#D5E2E8" stroke-width="2"/>
+            <path d="M384 334l8-8" stroke="#102B3A" stroke-width="3" stroke-linecap="round"/>
+            <text x="260" y="379" text-anchor="middle" class="dev-brand">AZMATEK · D-3024</text>
+          </g>
+        </svg>
+      </div>
+      <p class="stage-hint" id="deviceHint"><svg aria-hidden="true"><use href="#i-hand"/></svg>روی دستگاه کلیک کنید تا روشن شود؛ با هاور، درب بالا می‌رود</p>
+      <span class="chip-f chip--a"><svg aria-hidden="true"><use href="#i-gauge"/></svg><span>۴٬۵۰۰ دور بر دقیقه<small>حداکثر سرعت چرخش</small></span></span>
+      <span class="chip-f chip--b"><svg aria-hidden="true"><use href="#i-tube"/></svg><span>۱۲ جایگاه لوله<small>روتور زاویه‌دار</small></span></span>
+      <span class="chip-f chip--c"><svg aria-hidden="true"><use href="#i-clock"/></svg><span>تایمر دیجیتال<small>۹۹ دقیقه و ۵۹ ثانیه</small></span></span>
+    </div>
+  </div>
+</section>
+
+
+<div class="truststrip">
+  <div class="container truststrip__in">
+    <div class="tr"><i><svg aria-hidden="true"><use href="#i-shield"/></svg></i><div><b>ضمانت اصالت کالا</b><small>تأیید نمایندگی رسمی برند</small></div></div>
+    <div class="tr"><i><svg aria-hidden="true"><use href="#i-truck"/></svg></i><div><b>ارسال سریع سراسری</b><small>بسته‌بندی ایمن و بیمه‌ی حمل</small></div></div>
+    <div class="tr"><i><svg aria-hidden="true"><use href="#i-card"/></svg></i><div><b>پرداخت امن و فاکتور رسمی</b><small>سازگار با خرید سازمانی</small></div></div>
+    <div class="tr"><i><svg aria-hidden="true"><use href="#i-headset"/></svg></i><div><b>پشتیبانی فنی واقعی</b><small>کارشناس پاسخگو، قبل و بعد خرید</small></div></div>
+  </div>
+</div>
+
+
+<section class="sec" id="cats">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>دسته‌بندی محصولات</p>
+      <h2>هرچه آزمایشگاه‌تان نیاز دارد، یک‌جا</h2>
+    </div>
+    <div class="cats rv">
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-cf"/></svg></i><b>سانتریفیوژ</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-pipette"/></svg></i><b>پیپت و مایکروولوم</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-autoclave"/></svg></i><b>اتوکلاو و استریل</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-scale"/></svg></i><b>ترازوی دقیق</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-spectro"/></svg></i><b>اسپکتروفتومتر</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-bath"/></svg></i><b>حمام آب</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-incub"/></svg></i><b>انکوباتور</b></a>
+      <a class="cat-tile" href="#products"><i><svg aria-hidden="true"><use href="#i-micro"/></svg></i><b>میکروسکوپ</b></a>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="product" style="padding-top:0">
+  <div class="container">
+    <div class="spot rv">
+      <nav class="crumbs" aria-label="مسیر دسترسی">
+        <a href="#home">صفحه اصلی</a><svg aria-hidden="true"><use href="#i-chev-l"/></svg>
+        <a href="#products">محصولات</a><svg aria-hidden="true"><use href="#i-chev-l"/></svg>
+        <a href="#products">تجهیزات آزمایشگاهی</a><svg aria-hidden="true"><use href="#i-chev-l"/></svg>
+        <span>سانتریفیوژ D3024</span>
+      </nav>
+      <div class="spot__grid">
+        <div>
+          <figure class="pv-fig" id="pvFig" data-view="closed" style="--paint:#0B7285">
+            <span class="off">٪۱۲ تخفیف</span>
+            <div class="pv-art--device">
+              <svg class="pv-svg" viewBox="0 0 520 430" role="img" aria-label="سانتریفیوژ DLAB مدل D3024">
+                <ellipse cx="260" cy="404" rx="175" ry="14" fill="rgba(16,43,58,.08)"/>
+                <rect x="132" y="384" width="44" height="12" rx="5" fill="#DCE7EC"/>
+                <rect x="344" y="384" width="44" height="12" rx="5" fill="#DCE7EC"/>
+                <rect x="104" y="204" width="312" height="182" rx="26" fill="#fff" stroke="#D5E2E8" stroke-width="2"/>
+                <g stroke="#D5E2E8" stroke-width="2" stroke-linecap="round"><path d="M128 366h32M128 374h32M128 382h32"/></g>
+                <circle cx="260" cy="196" r="94" fill="#F7FBFD" stroke="#C9DDE6" stroke-width="2"/>
+                <g transform="translate(260,196)">
+                  <g class="rotorG">
+                    <g id="rt2"><rect x="-9" y="-92" width="18" height="44" rx="8" fill="#fff" stroke="#BFD6DE" stroke-width="1.6"/><rect x="-7" y="-102" width="14" height="12" rx="5" fill="currentColor"/></g>
+                    <use href="#rt2" style="color:#E03131"/><use href="#rt2" transform="rotate(30)" style="color:#1971C2"/>
+                    <use href="#rt2" transform="rotate(60)" style="color:#1F9D55"/><use href="#rt2" transform="rotate(90)" style="color:#F08C00"/>
+                    <use href="#rt2" transform="rotate(120)" style="color:#9C36B5"/><use href="#rt2" transform="rotate(150)" style="color:#0B7285"/>
+                    <use href="#rt2" transform="rotate(180)" style="color:#E03131"/><use href="#rt2" transform="rotate(210)" style="color:#1971C2"/>
+                    <use href="#rt2" transform="rotate(240)" style="color:#1F9D55"/><use href="#rt2" transform="rotate(270)" style="color:#F08C00"/>
+                    <use href="#rt2" transform="rotate(300)" style="color:#9C36B5"/><use href="#rt2" transform="rotate(330)" style="color:#0B7285"/>
+                    <circle r="29" fill="var(--paint,#0B7285)"/><circle r="10" fill="#06333D"/><circle r="3" fill="#8FE3F0"/>
+                  </g>
+                </g>
+                <g class="lid">
+                  <circle cx="260" cy="196" r="88" fill="rgba(140,205,220,.16)" stroke="#93C6D6" stroke-width="3"/>
+                  <rect x="243" y="94" width="34" height="13" rx="6.5" fill="var(--paint,#0B7285)"/>
+                </g>
+                <rect x="146" y="312" width="136" height="46" rx="10" fill="#07333D" stroke="#0C4A57"/>
+                <text x="198" y="346" text-anchor="middle" class="lcd">4500</text>
+                <text x="260" y="330" class="lcd-l">RPM</text>
+                <text x="260" y="348" class="lcd-l">MAX 4500</text>
+                <rect x="300" y="318" width="30" height="17" rx="8.5" fill="var(--paint,#0B7285)"/>
+                <rect x="338" y="318" width="30" height="17" rx="8.5" fill="#EDF4F7" stroke="#D5E2E8"/>
+                <circle cx="384" cy="334" r="15" fill="#EDF4F7" stroke="#D5E2E8" stroke-width="2"/>
+                <text x="260" y="379" text-anchor="middle" class="dev-brand">AZMATEK · D-3024</text>
+              </svg>
+            </div>
+            <div class="pv-art--panel">
+              <svg class="pv-svg" viewBox="0 0 520 430" role="img" aria-label="پنل کنترل دیجیتال دستگاه">
+                <rect x="90" y="70" width="340" height="270" rx="22" fill="#fff" stroke="#D5E2E8" stroke-width="2"/>
+                <rect x="118" y="100" width="180" height="86" rx="12" fill="#07333D" stroke="#0C4A57"/>
+                <text x="208" y="158" text-anchor="middle" class="lcd">4500</text>
+                <text x="208" y="122" class="lcd-l">SPEED · RPM</text>
+                <text x="208" y="174" class="lcd-l">TIMER 12:30</text>
+                <circle cx="358" cy="128" r="9" fill="#51CF66" opacity=".9"/>
+                <circle cx="388" cy="128" r="9" fill="#F08C00" opacity=".35"/>
+                <rect x="118" y="212" width="90" height="42" rx="10" fill="var(--paint,#0B7285)"/>
+                <rect x="222" y="212" width="90" height="42" rx="10" fill="#EDF4F7" stroke="#D5E2E8"/>
+                <rect x="326" y="212" width="90" height="42" rx="10" fill="#EDF4F7" stroke="#D5E2E8"/>
+                <rect x="118" y="270" width="90" height="42" rx="10" fill="#EDF4F7" stroke="#D5E2E8"/>
+                <rect x="222" y="270" width="90" height="42" rx="10" fill="#EDF4F7" stroke="#D5E2E8"/>
+                <rect x="326" y="270" width="90" height="42" rx="10" fill="#FCEBEB" stroke="#F1C2C2"/>
+                <text x="260" y="376" text-anchor="middle" class="dev-brand">DIGITAL CONTROL PANEL</text>
+              </svg>
+            </div>
+          </figure>
+          <div class="thumbs" role="group" aria-label="نماهای محصول">
+            <button class="thumb active" data-view="closed"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 12h16" stroke="currentColor" stroke-width="1.8"/></svg><span>نمای بسته</span></button>
+            <button class="thumb" data-view="open"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 6.5A8 8 0 0 1 18 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>درون دستگاه</span></button>
+            <button class="thumb" data-view="panel"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 10.5h6M6.5 13.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>پنل کنترل</span></button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="pv-title">سانتریفیوژ آزمایشگاهی مدل D3024</h3>
+          <p class="pv-brand">تولیدکننده: DLAB — مناسب برای استخراج RNA و DNA</p>
+          <div class="pv-rate">
+            <span class="stars" aria-label="امتیاز ۴.۸ از ۵"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+            <span>۴.۸ (۴۲ دیدگاه)</span><span>| کد کالا: D3024-AZ</span>
+          </div>
+          <div class="badges">
+            <span class="badge badge--ok"><svg aria-hidden="true"><use href="#i-check"/></svg>موجود در انبار</span>
+            <span class="badge badge--line"><svg aria-hidden="true"><use href="#i-shield"/></svg>گارانتی ۱۸ ماهه شرکتی</span>
+            <span class="badge badge--line"><svg aria-hidden="true"><use href="#i-truck"/></svg>ارسال ۴۸ ساعته تهران</span>
+          </div>
+          <ul class="attr-list">
+            <li><span>تولیدکننده</span><b>DLAB</b></li>
+            <li><span>جنس بدنه</span><b>ABS ضد اسید</b></li>
+            <li><span>کشور سازنده</span><b>چین</b></li>
+            <li><span>رنگ بدنه</span>
+              <span class="swatches">
+                <button class="swatch active" data-paint="#0B7285" style="--c:#0B7285" aria-label="رنگ آبی"></button>
+                <button class="swatch" data-paint="#DE2C2C" style="--c:#DE2C2C" aria-label="رنگ قرمز"></button>
+              </span>
+            </li>
+          </ul>
+          <div class="buy-row">
+            <div class="price"><del>۵۴٬۹۰۰٬۰۰۰</del><b>۴۸٬۵۰۰٬۰۰۰</b><small>تومان</small></div>
+            <span class="qty">
+              <button data-step="-1" aria-label="کاهش تعداد"><svg aria-hidden="true"><use href="#i-minus"/></svg></button>
+              <output id="qtyOut">۱</output>
+              <button data-step="1" aria-label="افزایش تعداد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+            </span>
+          </div>
+          <p class="pv-total">جمع: <b id="pvTotal">۴۸٬۵۰۰٬۰۰۰</b> تومان</p>
+          <div class="pv-ctas">
+            <button class="btn btn--pri" data-add="سانتریفیوژ D3024"><svg aria-hidden="true"><use href="#i-cart"/></svg>افزودن به سبد خرید</button>
+            <a class="btn btn--ghost" href="tel:+982191098700"><svg aria-hidden="true"><use href="#i-phone"/></svg>مشاوره خرید</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tablist" role="tablist" aria-label="اطلاعات محصول">
+          <button class="tab active" data-tab="0">مشخصات فنی</button>
+          <button class="tab" data-tab="1">داخل جعبه</button>
+          <button class="tab" data-tab="2">گارانتی و خدمات</button>
+        </div>
+        <div class="pane active" data-pane="0">
+          <ul class="spec-tbl">
+            <li><span>حداکثر سرعت</span><b>۱۵٬۰۰۰ دور بر دقیقه</b></li>
+            <li><span>ظرفیت روتور</span><b>۳۰ × ۱.۵ / ۲ میلی‌لیتر</b></li>
+            <li><span>حداکثر شتاب نسبی</span><b>۱۸٬۰۰۰ × g</b></li>
+            <li><span>دقت تایمر</span><b>± ۱ ثانیه</b></li>
+            <li><span>نمایشگر</span><b>LED دیجیتال</b></li>
+            <li><span>ابعاد / وزن</span><b>۲۴×۲۸×۲۲ سانتی‌متر / ۶.۸ کیلوگرم</b></li>
+          </ul>
+        </div>
+        <div class="pane" data-pane="1">
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>دستگاه اصلی همراه با درب شفاف</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>روتور ۳۰ جایگاه زاویه‌دار</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>روتور استریپ ۸ × ۰.۲ میلی‌لیتر برای PCR</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>آچار مخصوص روتور و درپوش‌های ایمنی</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>دفترچه راهنمای فارسی و کارت گارانتی</li>
+          </ul>
+        </div>
+        <div class="pane" data-pane="2">
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>۱۸ ماه گارانتی شرکتی + ۱۰ سال خدمات قطعات</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>نصب و آموزش رایگان در محل (تهران، ظرف ۴۸ ساعت)</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>ارسال شهرستان با باربری معتبر و بیمه‌ی حمل</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec sec--white" id="products">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>پرفروش‌های آزماتک</p>
+      <h2>محصولات منتخب با بهترین قیمت</h2>
+      <p class="sub">همه‌ی قیمت‌ها به‌روز و شامل فاکتور رسمی هستند؛ برای استعلام خرید سازمانی با ما تماس بگیرید.</p>
+    </div>
+    <div class="catalog__bar rv">
+      <div class="fchips" id="fchips" role="group" aria-label="فیلتر دسته‌بندی">
+        <button class="fchip active" data-cat="all">همه</button>
+        <button class="fchip" data-cat="cf">سانتریفیوژ</button>
+        <button class="fchip" data-cat="pip">پیپتینگ</button>
+        <button class="fchip" data-cat="ster">استریلیزاسیون</button>
+        <button class="fchip" data-cat="meas">اندازه‌گیری</button>
+      </div>
+      <label class="sort"><svg aria-hidden="true"><use href="#i-percent"/></svg>
+        <select id="sortSel" aria-label="مرتب‌سازی">
+          <option value="pop">پرفروش‌ترین</option>
+          <option value="asc">ارزان‌ترین</option>
+          <option value="desc">گران‌ترین</option>
+        </select>
+      </label>
+    </div>
+    <div class="prod-grid" id="prodGrid">
+      <article class="product-card rv" data-cat="cf" data-price="48500000" data-rank="1">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-cf"/></svg>
+          <span class="tag tag--hot">پرفروش</span>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">DLAB</span>
+          <h3 class="product-card__title">سانتریفیوژ آزمایشگاهی D3024</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-tube"/></svg>۳۰ جایگاه</li>
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۱۵٬۰۰۰ RPM</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۸ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۴۸٬۵۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="سانتریفیوژ D3024" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="cf" data-price="12000000" data-rank="2">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-cf"/></svg>
+          <span class="tag tag--rna">ایده‌آل برای RNA/DNA</span>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">DLAB</span>
+          <h3 class="product-card__title">سانتریفیوژ کمپکت DM0416</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-tube"/></svg>۸ میلی‌لیتر</li>
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۱۵۰۰ RPM</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۲ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۱۲٬۰۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="سانتریفیوژ DM0416" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="cf" data-price="6900000" data-rank="3">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-cf"/></svg>
+          <span class="tag tag--new">جدید</span>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">NUOPIN</span>
+          <h3 class="product-card__title">مینی‌فیوژ سانتریفیوژ ۱۲ جایته</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-tube"/></svg>۱۲ جایگاه</li>
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۴٬۰۰۰ RPM</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۲ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۶٬۹۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="مینی‌فیوژ ۱۲ جایته نوپین" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="pip" data-price="9400000" data-rank="4">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-pipette"/></svg>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">DLAB</span>
+          <h3 class="product-card__title">میکروپیپت چندحجمی ۱۰ تا ۱۰۰ میکرولیتر</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>دقت ±۱٪</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۲ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۹٬۴۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="میکروپیپت چندحجمی" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="pip" data-price="26500000" data-rank="5">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-pipette"/></svg>
+          <span class="tag tag--hot">پرفروش</span>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">DLAB</span>
+          <h3 class="product-card__title">ست میکروپیپت ۴ تکه + پایه چرخشی</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-tube"/></svg>۰.۵ تا ۱۰۰۰ µl</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۸ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۲۶٬۵۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="ست میکروپیپت ۴ تکه" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="ster" data-price="185000000" data-rank="6">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-autoclave"/></svg>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">RAYPA</span>
+          <h3 class="product-card__title">اتوکلاو رومیزی ۲۵ لیتری کلاس B</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۱۳۴ درجه</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۲۴ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۱۸۵٬۰۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="اتوکلاو رومیزی ۲۵ لیتری" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="meas" data-price="98000000" data-rank="7">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-scale"/></svg>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">SARTORIUS</span>
+          <h3 class="product-card__title">ترازوی تحلیلی با دقت ۰.۱ میلی‌گرم</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۰.۱ mg</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۲۴ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۹۸٬۰۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="ترازوی تحلیلی" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <article class="product-card rv" data-cat="meas" data-price="145000000" data-rank="8">
+        <div class="product-card__media">
+          <svg class="product-card__art" aria-hidden="true"><use href="#i-spectro"/></svg>
+          <span class="tag tag--new">جدید</span>
+          <button class="product-card__like" aria-label="افزودن به علاقه‌مندی"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__brand">UNICO</span>
+          <h3 class="product-card__title">اسپکتروفتومتر UV-Vis اسکن‌دار</h3>
+          <ul class="spec-row">
+            <li><svg aria-hidden="true"><use href="#i-gauge"/></svg>۱۹۰–۱۱۰۰ nm</li>
+            <li><svg aria-hidden="true"><use href="#i-shield"/></svg>۱۸ ماه</li>
+          </ul>
+          <div class="product-card__foot">
+            <span class="price-s"><b>۱۴۵٬۰۰۰٬۰۰۰</b><small>تومان</small></span>
+            <button class="cart-btn" data-add="اسپکتروفتومتر UV-Vis" aria-label="افزودن به سبد خرید"><svg aria-hidden="true"><use href="#i-cart"/></svg></button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="consumables">
+  <div class="container">
+    <div class="cons rv">
+      <div class="cons__head">
+        <div>
+          <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>مکمل‌ها و اقلام مصرفی</p>
+          <h2>تمدید موجودی آزمایشگاه، بدون معطلی</h2>
+        </div>
+        <div class="cons__nav">
+          <button class="prev" id="consPrev" aria-label="قبلی"><svg aria-hidden="true"><use href="#i-chev-r"/></svg></button>
+          <button id="consNext" aria-label="بعدی"><svg aria-hidden="true"><use href="#i-chev-l"/></svg></button>
+        </div>
+      </div>
+      <div class="c-track" id="consTrack" aria-label="لیست اقلام مصرفی — با درگ یا دکمه‌ها حرکت کنید">
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#i-tube"/></svg></span><h3>لوله فالکون ۱۵ml</h3><p>بسته ۵۰۰ عددی — استرون</p><div class="c-card__foot"><span><b>۸۹۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="لوله فالکون ۱۵ml" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#i-tube"/></svg></span><h3>میکروتیوب ۱.۵ml</h3><p>بسته ۱۰۰۰ عددی — درپوش فلپ</p><div class="c-card__foot"><span><b>۶۵۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="میکروتیوب ۱.۵ml" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#i-pipette"/></svg></span><h3>پیپت سرولوژیک ۵ml</h3><p>بسته ۲۵۰ عددی — تک‌دوز</p><div class="c-card__foot"><span><b>۱٬۲۰۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="پیپت سرولوژیک ۵ml" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#i-hand"/></svg></span><h3>دستکش نیتریل M</h3><p>جعبه ۱۰۰ عددی — بدون پودر</p><div class="c-card__foot"><span><b>۴۸۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="دستکش نیتریل" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#c-roll"/></svg></span><h3>فویل پارافین</h3><p>بسته ۴ رول — ضد رطوبت</p><div class="c-card__foot"><span><b>۳۲۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="فویل پارافین" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+        <article class="c-card"><span class="c-card__ic"><svg aria-hidden="true"><use href="#c-bottle"/></svg></span><h3>الکل ۷۰ آزمایشگاهی</h3><p>گالن ۴ لیتری — خلوص بالا</p><div class="c-card__foot"><span><b>۳۹۰٬۰۰۰</b><small>تومان</small></span><button class="c-add" data-add="الکل ۷۰" aria-label="افزودن به سبد"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div></article>
+      </div>
+      <div class="cons__prog" aria-hidden="true"><i id="consBar"></i></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec sec--white" id="services">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>خدمات آزمایشگاهی</p>
+      <h2>پشتیبانی فنی برای همه‌ی تخصص‌ها</h2>
+      <p class="sub">علاوه بر تأمین تجهیزات، برای هر تخصص آزمایشگاهی مشاوره، کالیبراسیون و خدمات پس از فروش ارائه می‌دهیم.</p>
+    </div>
+    <div class="svc-grid rv">
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-drop"/></svg></i><div><h3>آزمایش خون <small lang="en">Hematology</small></h3><p>شمارش سلولی و آنالیز کامل خون با دستگاه‌های کالیبره‌شده.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-microbe"/></svg></i><div><h3>میکروبیولوژی <small lang="en">Microbiology</small></h3><p>کشت، شناسایی و آنتی‌بیوگرام عوامل میکروبی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#i-flask"/></svg></i><div><h3>بیوشیمی بالینی <small lang="en">Biochemistry</small></h3><p>اندازه‌گیری قند، چربی و آنزیم‌های کبدی و کلیوی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-molecule"/></svg></i><div><h3>آنزیم‌شناسی <small lang="en">Enzymology</small></h3><p>سنجش فعالیت آنزیم‌ها و پروفایل بیوشیمیایی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-atom"/></svg></i><div><h3>آزمایش فلزات <small lang="en">Trace Metals</small></h3><p>اندازه‌گیری فلزات سنگین و عناصر کم‌مقدار در نمونه‌ها.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-dna"/></svg></i><div><h3>ژنتیک مولکولی <small lang="en">DNA / RNA</small></h3><p>استخراج و تکثیر اسیدهای نوکلئیک و واکنش‌های PCR.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#i-micro"/></svg></i><div><h3>پاتولوژی <small lang="en">Pathology</small></h3><p>نمونه‌برداری، برش‌گذاری و رنگ‌آمیزی بافتی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-syringe"/></svg></i><div><h3>PRP و پلاسما <small lang="en">PRP Therapy</small></h3><p>جداسازی پلاسمای غنی از پلاکت با سانتریفیوژ اختصاصی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#s-ab"/></svg></i><div><h3>پادتن‌شناسی <small lang="en">Serology</small></h3><p>شناسایی پادتن‌ها و آنتی‌ژن‌های عوامل عفونی.</p></div></article>
+      <article class="svc-item"><i><svg aria-hidden="true"><use href="#i-shield-plus"/></svg></i><div><h3>ایمونولوژی <small lang="en">Immunology</small></h3><p>سنجش پاسخ ایمنی با تکنیک الایزا و کیت‌های معتبر.</p></div></article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="about">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>چرا آزماتک؟</p>
+      <h2>خرید بدون دغدغه، از مشاوره تا گارانتی</h2>
+    </div>
+    <div class="feat-grid">
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-shield"/></svg></i><h3>ضمانت اصالت کالا</h3><p>همه‌ی محصولات با اصالت‌نامه و تأیید نمایندگی رسمی عرضه می‌شوند.</p></article>
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-wrench"/></svg></i><h3>خدمات پس از فروش</h3><p>کالیبراسیون دوره‌ای، تأمین قطعات و تعمیر در کارگاه اختصاصی.</p></article>
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-book"/></svg></i><h3>آموزش و نصب رایگان</h3><p>نصب در محل و آموزش کاربری به پرسنل آزمایشگاه شما.</p></article>
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-headset"/></svg></i><h3>مشاوره پیش از خرید</h3><p>کارشناسان ما متناسب با کاربرد و بودجه، بهترین گزینه را پیشنهاد می‌دهند.</p></article>
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-truck"/></svg></i><h3>ارسال سریع سراسری</h3><p>بسته‌بندی ایمن استاندارد و ارسال به تمام استان‌ها با بیمه‌ی حمل.</p></article>
+      <article class="feat rv"><i><svg aria-hidden="true"><use href="#i-doc"/></svg></i><h3>فاکتور رسمی و قرارداد</h3><p>صدور فاکتور رسمی و قرارداد تأمین برای سازمان‌ها و بیمارستان‌ها.</p></article>
+    </div>
+    <div class="stats rv">
+      <div class="stat"><b><span class="c-num" data-count="12">۱۲</span>+</b><span>سال سابقه‌ی تأمین تجهیزات</span></div>
+      <div class="stat"><b><span class="c-num" data-count="4800">۴٬۸۰۰</span>+</b><span>آزمایشگاه مشتری</span></div>
+      <div class="stat"><b><span class="c-num" data-count="2500">۲٬۵۰۰</span>+</b><span>کد کالای فعال</span></div>
+      <div class="stat"><b><span class="c-num" data-count="31">۳۱</span></b><span>استان تحت پوشش ارسال</span></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec sec--white" id="testimonials">
+  <div class="container">
+    <div class="sec-head rv">
+      <p class="eyebrow"><svg aria-hidden="true"><use href="#i-flask"/></svg>نظر مشتریان</p>
+      <h2>اعتماد آزمایشگاه‌ها، سرمایه‌ی ماست</h2>
+    </div>
+    <div class="t-wrap rv" id="tWrap">
+      <div class="t-slide">
+        <svg class="tq" aria-hidden="true"><use href="#i-quote"/></svg>
+        <blockquote>سفارش سانتریفیوژها ظرف سه روز به آزمایشگاه ما رسید و نصب و آموزش هم انجام شد. پشتیبانی فنی‌شان واقعاً پاسخ‌گو است.</blockquote>
+        <div class="t-who"><span class="stars" aria-label="۵ از ۵"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span><b>دکتر سارا موسوی</b><span>مدیر آزمایشگاه تحقیقاتی، تهران</span></div>
+      </div>
+      <div class="t-slide">
+        <svg class="tq" aria-hidden="true"><use href="#i-quote"/></svg>
+        <blockquote>برای استخراج RNA به دستگاهی دقیق نیاز داشتیم؛ مشاوره‌ی تخصصی‌شان کمک کرد بهترین انتخاب را با بودجه‌ی ما انجام دهیم.</blockquote>
+        <div class="t-who"><span class="stars" aria-label="۵ از ۵"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span><b>مهندس رضا کاظمی</b><span>مسئول فنی آزمایشگاه مولکولی، کرج</span></div>
+      </div>
+      <div class="t-slide">
+        <svg class="tq" aria-hidden="true"><use href="#i-quote"/></svg>
+        <blockquote>دو سال است تجهیزات آزمایشگاه را از اینجا تأمین می‌کنیم؛ ضمانت و خدمات پس از فروش بی‌نقص است.</blockquote>
+        <div class="t-who"><span class="stars" aria-label="۵ از ۵"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span><b>مریم احمدی</b><span>بنیان‌گذار آزمایشگاه پاتوبیولوژی، اصفهان</span></div>
+      </div>
+      <div class="t-ctl">
+        <button class="t-btn prev" id="tPrev" aria-label="نظر قبلی"><svg aria-hidden="true"><use href="#i-chev-r"/></svg></button>
+        <button class="t-btn" id="tNext" aria-label="نظر بعدی"><svg aria-hidden="true"><use href="#i-chev-l"/></svg></button>
+        <div class="t-dots" id="tDots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="contact" style="padding-top:0">
+  <div class="container">
+    <div class="news rv">
+      <div>
+        <h2>لیست قیمت به‌روز و پیشنهاد خرید را دریافت کنید</h2>
+        <p>ایمیل یا شماره‌تان را وارد کنید؛ کارشناس فروش با لیست قیمت روز و مشاوره‌ی رایگان تماس می‌گیرد.</p>
+      </div>
+      <form id="newsForm">
+        <input type="text" id="newsEmail" placeholder="ایمیل یا شماره موبایل شما" aria-label="ایمیل یا شماره موبایل" required>
+        <button class="btn btn--pri" type="submit"><svg aria-hidden="true"><use href="#i-mail"/></svg>دریافت مشاوره</button>
+      </form>
+      <p class="news__note">یا همین حالا تماس بگیرید: <a href="tel:+982191098700" dir="ltr">۰۲۱ – ۹۱۰۹ ۸۷۰۰</a> — شنبه تا پنجشنبه، ۸:۳۰ تا ۱۸</p>
+    </div>
+  </div>
+</section>
+</main>
+
+
+<footer class="site-footer">
+  <div class="container foot__grid">
+    <div class="foot__about">
+      <a class="logo" href="#home">
+        <span class="logo__mark"><svg aria-hidden="true"><use href="#i-flask"/></svg></span>
+        <span><b>آزماتک</b><small>فروشگاه تجهیزات آزمایشگاهی</small></span>
+      </a>
+      <p>از سال ۱۳۹۱ در کنار آزمایشگاه‌های تحقیقاتی، تشخیص طبی و صنعت؛ تأمین تجهیزات دقیق با ضمانت اصالت و پشتیبانی واقعی.</p>
+    </div>
+    <div class="foot__col">
+      <h3>دسترسی سریع</h3>
+      <ul>
+        <li><a href="#products">محصولات</a></li>
+        <li><a href="#services">خدمات آزمایشگاهی</a></li>
+        <li><a href="#about">درباره ما</a></li>
+        <li><a href="#contact">تماس با ما</a></li>
+      </ul>
+    </div>
+    <div class="foot__col">
+      <h3>دسته‌بندی‌ها</h3>
+      <ul>
+        <li><a href="#products">سانتریفیوژ</a></li>
+        <li><a href="#products">پیپت و مایکروولوم</a></li>
+        <li><a href="#products">اتوکلاو و استریل</a></li>
+        <li><a href="#products">اندازه‌گیری و آنالیز</a></li>
+      </ul>
+    </div>
+    <div class="foot__col">
+      <h3>تماس با ما</h3>
+      <ul>
+        <li><svg aria-hidden="true"><use href="#i-pin"/></svg>تهران، خیابان کارگر شمالی، پلاک ۵۴</li>
+        <li><svg aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+982191098700" dir="ltr">۰۲۱ – ۹۱۰۹ ۸۷۰۰</a></li>
+        <li><svg aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:sales@azmatek.ir">sales@azmatek.ir</a></li>
+        <li><svg aria-hidden="true"><use href="#i-clock"/></svg>شنبه تا پنجشنبه — ۸:۳۰ تا ۱۸</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container foot__base">
+    <span>© ۱۴۰۳ آزماتک — تمامی حقوق محفوظ است.</span>
+    <div class="foot__certs">
+      <span><svg aria-hidden="true"><use href="#i-shield"/></svg>اصالت کالا</span>
+      <span><svg aria-hidden="true"><use href="#i-doc"/></svg>نماد اعتماد الکترونیکی</span>
+      <span><svg aria-hidden="true"><use href="#i-card"/></svg>درگاه پرداخت امن</span>
+    </div>
+  </div>
+</footer>
+
+
+
+</body>
+</html>
